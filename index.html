@@ -53,15 +53,6 @@
             margin-bottom: 20px;
             text-align: center;
             color: white;
-            position: relative;
-        }
-        
-        .header-controls {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
         }
         
         /* Layout Grid */
@@ -325,12 +316,40 @@
             align-items: center;
             gap: 8px;
             font-size: 0.8rem;
-            color: white;
+            color: var(--text-dark);
+        }
+
+        /* Mode Toggle Card */
+        .mode-toggle-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 1px solid #dee2e6;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 18px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mode-toggle-card .toggle-label {
+            font-weight: 600;
+            color: var(--primary-color);
         }
 
         @media (max-width: 900px) { 
             .main-grid { grid-template-columns: 1fr; } 
             .detail-grid { grid-template-columns: 1fr; } 
+            
+            .mode-toggle-card {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .mode-toggle-card .toggle-label {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -340,16 +359,21 @@
         <header>
             <h1><i class="fas fa-tree"></i> Reserva da Foz</h1>
             <p>Gestão de Lotes - Versão 4.9 (Modo Simplificado)</p>
-            <div class="header-controls">
-                <div class="toggle-label">
-                    <span>Modo Simplificado</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="simplifiedModeToggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
         </header>
+
+        <!-- Card de Controle de Modo Simplificado -->
+        <div class="mode-toggle-card">
+            <div class="toggle-label">
+                <i class="fas fa-eye-slash"></i> Modo Simplificado
+                <span style="font-size: 0.7rem; display: block; margin-top: 3px; color: #666;">
+                    Oculta os recursos de configuração
+                </span>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="simplifiedModeToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
 
         <div class="main-grid" id="mainGrid">
             <div class="controls-column" id="controlsColumn">
