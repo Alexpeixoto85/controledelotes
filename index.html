@@ -1,0 +1,996 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva da Foz - Sistema Integrado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            /* Paleta Amazônia */
+            --primary-color: #1b4d3e;      /* Verde Floresta */
+            --primary-light: #2d6a4f;
+            --secondary-color: #8c6239;    /* Terra */
+            --bg-color: #f1f8f4;           /* Menta Suave */
+            --card-bg: #ffffff;
+            
+            /* Status */
+            --success-color: #40916c;
+            --danger-color: #bc4749;
+            
+            --text-dark: #1f2421;
+            --border-radius: 12px;
+            --box-shadow: 0 6px 15px rgba(27, 77, 62, 0.15);
+            --transition: all 0.3s ease;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 20px;
+            background-image: radial-gradient(#1b4d3e 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        /* Layout Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 18px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Botões */
+        button {
+            padding: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+        }
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-primary:hover { background-color: var(--primary-light); transform: translateY(-2px); }
+        .btn-success { background-color: var(--success-color); color: white; }
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-outline { border: 2px solid var(--primary-color); color: var(--primary-color); background: transparent; }
+        .btn-outline:hover { background: var(--primary-color); color: white; }
+        .btn-warning { background-color: #e9b949; color: white; }
+        .btn-warning:hover { background-color: #d4a235; }
+        
+        /* Botão pequeno para ação rápida */
+        .btn-sm { padding: 4px 8px; font-size: 0.75rem; width: auto; margin: 0; }
+        .btn-action-card { 
+            border: 1px solid #ccc; color: #555; background: #f8f9fa; 
+            position: absolute; bottom: 12px; right: 12px; z-index: 5;
+        }
+        .btn-action-card:hover { background: #e2e6ea; color: #000; }
+
+        /* Inputs */
+        .file-input-wrapper { position: relative; margin-bottom: 12px; }
+        input[type="file"] {
+            width: 100%; padding: 8px; border: 2px dashed var(--primary-light);
+            border-radius: var(--border-radius); background: #f9fbf9; cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .search-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+        .search-input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.85rem; }
+
+        /* Gráficos */
+        .chart-wrapper { position: relative; height: 170px; margin-bottom: 15px; }
+
+        /* Cards de Lotes */
+        #resultsContainer {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px;
+        }
+        .lot-card {
+            background: white; border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: var(--transition);
+            border: 1px solid #eee; cursor: pointer; position: relative;
+            display: flex; flex-direction: column;
+            padding-bottom: 45px;
+        }
+        .lot-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .lot-card-header { padding: 12px; color: white; display: flex; justify-content: space-between; border-radius: 10px 10px 0 0; }
+        .lot-card.disponivel .lot-card-header { background: var(--success-color); }
+        .lot-card.vendido .lot-card-header { background: var(--danger-color); }
+        .lot-card.vendido { opacity: 0.85; }
+        
+        .lot-body { padding: 12px; font-size: 0.8rem; flex-grow: 1; }
+        .lot-info-row { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px dashed #eee; padding-bottom: 3px; }
+        
+        /* MODAL (Ficha Técnica) */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background: white; width: 95%; max-width: 800px; max-height: 90vh;
+            border-radius: 12px; overflow-y: auto; position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .modal-header {
+            background: var(--primary-color); color: white; padding: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0;
+        }
+        .modal-body { padding: 18px; }
+        .detail-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); 
+            gap: 10px; 
+        }
+        .detail-item { background: #f8f9fa; padding: 8px; border-radius: 6px; }
+        .detail-label { font-size: 0.7rem; color: #666; display: block; }
+        .detail-value { font-size: 0.85rem; font-weight: bold; color: var(--primary-color); display: block; }
+        .close-modal { background: none; border: none; color: white; font-size: 1.3rem; cursor: pointer; width: auto; margin: 0; }
+
+        /* Status Badge */
+        .status-badge {
+            background: rgba(255,255,255,0.9); color: #333;
+            padding: 3px 7px; border-radius: 10px; font-size: 0.65rem; font-weight: bold;
+        }
+
+        /* Sales Input Area */
+        .sales-input-area { background-color: #ffedea; border: 1px solid #ffcccb; padding: 12px; border-radius: 10px; margin-top: 15px; }
+        .sales-input { width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #eeb4b4; border-radius: 6px; font-size: 0.85rem; }
+
+        /* Valor Médio */
+        .avg-value-card {
+            background: linear-gradient(135deg, #8c6239, #a87c52);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 18px;
+            box-shadow: var(--box-shadow);
+        }
+        .avg-value-card h3 {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        .avg-value-card .value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .avg-value-card .description {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        /* Backup Section */
+        .backup-section {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #ddd;
+        }
+
+        /* Detecção de cores */
+        .color-detection-section {
+            background-color: #fff8e1;
+            border: 1px solid #ffd54f;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .color-sample {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin: 0 5px;
+            vertical-align: middle;
+            border: 1px solid #ccc;
+        }
+
+        .detection-results {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        /* Status Correction */
+        .status-correction {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 900px) { 
+            .main-grid { grid-template-columns: 1fr; } 
+            .detail-grid { grid-template-columns: 1fr; } 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-tree"></i> Reserva da Foz</h1>
+            <p>Gestão de Lotes - Versão 4.8 (Detecção Avançada de Lotes Vendidos)</p>
+        </header>
+
+        <div class="main-grid">
+            <div class="controls-column">
+                <div class="card">
+                    <h2><i class="fas fa-file-import"></i> Dados</h2>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="pdfFileInput" accept=".pdf">
+                    </div>
+                    <button id="importPdfButton" class="btn-primary"><i class="fas fa-cog"></i> Processar PDF</button>
+                    <div id="loadingIndicator" style="display:none; text-align:center; margin-top:8px; color:#666; font-size:0.8rem;">Lendo arquivo...</div>
+                    
+                    <div class="color-detection-section">
+                        <h3 style="color:#e65100; margin-bottom:8px; font-size:0.9rem;"><i class="fas fa-palette"></i> Detecção de Lotes Vendidos</h3>
+                        <p style="font-size:0.7rem; margin-bottom:5px;">O sistema detectará automaticamente lotes vendidos baseado na formatação do PDF.</p>
+                        <div class="detection-results" id="detectionResults">
+                            <div>Status: Aguardando processamento</div>
+                        </div>
+                        <div class="status-correction" id="statusCorrection" style="display:none;">
+                            <p style="font-size:0.7rem; margin-bottom:5px;"><i class="fas fa-info-circle"></i> <strong>Status preservados:</strong> Lotes já marcados como vendidos mantiveram seu status.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card de Valor Médio Geral -->
+                <div class="avg-value-card">
+                    <h3><i class="fas fa-chart-line"></i> Valor Médio Geral</h3>
+                    <div class="value" id="avgTotalValue">R$ 0,00</div>
+                    <div class="description">Média de valor dos lotes</div>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-chart-pie"></i> Disponibilidade Total</h2>
+                    <div class="chart-wrapper" style="height: 150px;">
+                        <canvas id="quantityChart"></canvas>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.8rem; padding-top:8px; border-top:1px dashed #eee;">
+                        <span>Total: <strong id="totalCount">0</strong></span>
+                        <span style="color:var(--success-color)">Disp: <strong id="availCount">0</strong></span>
+                        <span style="color:var(--danger-color)">Vend: <strong id="soldCount">0</strong></span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-building"></i> Disponíveis por Quadra</h2>
+                    <div class="chart-wrapper" style="height: 180px;">
+                        <canvas id="quadraChart"></canvas>
+                    </div>
+                    <p style="font-size:0.7rem; text-align:center; color:#666;">Quantidade de lotes livres em cada quadra</p>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-chart-line"></i> Financeiro (VGV)</h2>
+                    <div class="chart-wrapper" style="height: 150px;">
+                        <canvas id="financialChart"></canvas>
+                    </div>
+                    <p style="font-size:0.7rem; text-align:center; color:#666;">Potencial de Vendas vs. Realizado</p>
+                </div>
+
+                <div class="sales-input-area">
+                    <h3 style="color:var(--danger-color); margin-bottom:8px; font-size:0.9rem;"><i class="fas fa-tag"></i> Marcar em Massa</h3>
+                    <p style="font-size:0.7rem; margin-bottom:5px;">Itens vermelhos (separados por vírgula):</p>
+                    <input type="text" id="soldItemsInput" class="sales-input" placeholder="Ex: 1, 5, 12, 34...">
+                    <button id="markSoldButton" class="btn-danger">Marcar Vendidos</button>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-file-export"></i> Ações</h2>
+                    <button id="downloadFullPdf" class="btn-success"><i class="fas fa-file-pdf"></i> Exportar PDF Completo</button>
+                    
+                    <div class="backup-section">
+                        <h3 style="font-size:0.85rem; margin-bottom:8px; color:#666;"><i class="fas fa-database"></i> Backup do Sistema</h3>
+                        <button id="backupButton" class="btn-warning"><i class="fas fa-download"></i> Fazer Backup</button>
+                        <button id="restoreButton" class="btn-outline" style="margin-top:6px;"><i class="fas fa-upload"></i> Restaurar Backup</button>
+                        <input type="file" id="restoreFileInput" accept=".json" style="display:none;">
+                    </div>
+                    
+                    <button id="clearButton" class="btn-outline" style="margin-top:8px;"><i class="fas fa-trash"></i> Limpar Sistema</button>
+                </div>
+            </div>
+
+            <div class="results-column">
+                <div class="card">
+                    <h2><i class="fas fa-list"></i> Catálogo de Lotes</h2>
+                    <div class="search-bar">
+                        <input type="text" id="searchLote" class="search-input" placeholder="Buscar Lote...">
+                        <input type="text" id="searchQuadra" class="search-input" placeholder="Quadra...">
+                        <select id="filterStatus" class="search-input">
+                            <option value="todos">Todos</option>
+                            <option value="disponivel">Disponíveis</option>
+                            <option value="vendido">Vendidos</option>
+                        </select>
+                        <select id="sortSelect" class="search-input">
+                            <option value="quadra">Ordenar por Quadra</option>
+                            <option value="valor">Ordenar por Valor</option>
+                        </select>
+                    </div>
+                    <div id="resultsContainer">
+                        <div style="grid-column:1/-1; text-align:center; padding:30px; color:#aaa;">
+                            <i class="fas fa-folder-open" style="font-size:2.5rem; margin-bottom:8px;"></i>
+                            <p>Importe o PDF para começar.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Detalhes</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Quadra / Lote</span>
+                        <span class="detail-value" id="mQuadraLote">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Item Tabela</span>
+                        <span class="detail-value" id="mItem">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Tamanho (m²)</span>
+                        <span class="detail-value" id="mTam">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Valor do m²</span>
+                        <span class="detail-value" id="mM2">-</span>
+                    </div>
+                    <div class="detail-item" style="grid-column: 1/-1; background: #e8f5e9; border:1px solid #c8e6c9;">
+                        <span class="detail-label">Valor Total</span>
+                        <span class="detail-value" id="mTotal" style="font-size:1.1rem; color:#2e7d32;">-</span>
+                    </div>
+                    
+                    <div class="detail-item"><span class="detail-label">Sinal</span><span class="detail-value" id="mSinal">-</span></div>
+                    <div class="detail-item"><span class="detail-label">Sinal à Vista</span><span class="detail-value" id="mSinalVista">-</span></div>
+                    <div class="detail-item"><span class="detail-label">Reserva</span><span class="detail-value" id="mReserva">-</span></div>
+                    <div class="detail-item"><span class="detail-label">Saldo à Vista</span><span class="detail-value" id="mSaldoVista">-</span></div>
+                    <div class="detail-item"><span class="detail-label">Saldo em 2x</span><span class="detail-value" id="mSaldo2x">-</span></div>
+                    <div class="detail-item"><span class="detail-label">Saldo em 3x</span><span class="detail-value" id="mSaldo3x">-</span></div>
+                    <div class="detail-item"><span class="detail-label">Saldo 60 meses</span><span class="detail-value" id="mSaldo60">-</span></div>
+                    <div class="detail-item"><span class="detail-label">120 Meses</span><span class="detail-value" id="m120">-</span></div>
+                    <div class="detail-item"><span class="detail-label">156 Meses</span><span class="detail-value" id="m156">-</span></div>
+                    <div class="detail-item"><span class="detail-label">160 Meses</span><span class="detail-value" id="m160">-</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Estado
+            let database = [];
+            let charts = {};
+
+            // Inicializar Gráficos
+            function initCharts() {
+                // 1. Quantidade Geral
+                const ctxQty = document.getElementById('quantityChart').getContext('2d');
+                charts.qty = new Chart(ctxQty, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Disponíveis', 'Vendidos'],
+                        datasets: [{ data: [0,0], backgroundColor: ['#40916c', '#bc4749'], borderWidth: 0 }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        cutout: '60%', 
+                        plugins: { legend: { display: false } } 
+                    }
+                });
+
+                // 2. Lotes por Quadra
+                const ctxQuadra = document.getElementById('quadraChart').getContext('2d');
+                charts.quadra = new Chart(ctxQuadra, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Disponíveis',
+                            data: [],
+                            backgroundColor: '#2d6a4f',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { display: false },
+                            tooltip: { callbacks: { label: (context) => `Disponíveis: ${context.raw}` } }
+                        },
+                        scales: { 
+                            y: { beginAtZero: true, ticks: { stepSize: 1 } }, 
+                            x: { grid: { display: false } } 
+                        }
+                    }
+                });
+
+                // 3. Financeiro (VGV)
+                const ctxFin = document.getElementById('financialChart').getContext('2d');
+                charts.fin = new Chart(ctxFin, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Disp.', 'Vend.'],
+                        datasets: [{
+                            label: 'Valor (R$)',
+                            data: [0, 0],
+                            backgroundColor: ['#40916c', '#bc4749'],
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { 
+                            y: { 
+                                beginAtZero: true, 
+                                ticks: { 
+                                    callback: v => 'R$ ' + (v/1000000).toFixed(1) + 'M' 
+                                } 
+                            } 
+                        }
+                    }
+                });
+            }
+
+            // Processamento PDF com detecção avançada de cores
+            document.getElementById('importPdfButton').addEventListener('click', async () => {
+                const file = document.getElementById('pdfFileInput').files[0];
+                if (!file) return alert('Selecione o PDF.');
+                
+                document.getElementById('loadingIndicator').style.display = 'block';
+                document.getElementById('detectionResults').innerHTML = '<div>Status: Processando PDF...</div>';
+                document.getElementById('statusCorrection').style.display = 'none';
+                
+                try {
+                    const buffer = await file.arrayBuffer();
+                    const pdf = await pdfjsLib.getDocument(buffer).promise;
+                    let fullText = '';
+                    
+                    // Processar cada página para extrair texto
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const content = await page.getTextContent();
+                        
+                        // Extrair texto
+                        fullText += content.items.map(item => item.str).join(' ') + '\n';
+                    }
+                    
+                    // Processar dados extraídos
+                    const parsedData = parseAndLoad(fullText);
+                    const existingSoldItems = getExistingSoldItems();
+                    const colorDetectedData = applyColorDetection(parsedData, existingSoldItems);
+                    
+                    database = colorDetectedData;
+                    saveAndRender();
+                    
+                    // Mostrar resultados da detecção
+                    const soldCount = database.filter(l => l.status === 'vendido').length;
+                    const newlyDetected = soldCount - existingSoldItems.length;
+                    
+                    document.getElementById('detectionResults').innerHTML = 
+                        `<div>Status: Processamento concluído</div>
+                         <div>Total de lotes: ${database.length}</div>
+                         <div>Lotes vendidos detectados: <strong>${soldCount}</strong></div>
+                         <div>Novos lotes vendidos detectados: <strong>${newlyDetected}</strong></div>
+                         <div style="margin-top:5px; font-size:0.7rem;">Verifique os resultados e ajuste se necessário.</div>`;
+                         
+                    document.getElementById('statusCorrection').style.display = 'block';
+                    
+                    alert(`${database.length} lotes carregados! ${newlyDetected} novos lotes detectados como VENDIDO.`);
+                } catch (e) {
+                    alert('Erro ao ler PDF: ' + e.message);
+                    document.getElementById('detectionResults').innerHTML = 
+                        `<div style="color:var(--danger-color)">Erro: ${e.message}</div>`;
+                } finally {
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                }
+            });
+
+            // Obter itens já marcados como vendidos no sistema
+            function getExistingSoldItems() {
+                return database.filter(item => item.status === 'vendido').map(item => item.item);
+            }
+
+            // Aplicar detecção de cores aos dados
+            function applyColorDetection(parsedData, existingSoldItems) {
+                // Primeiro, preservar o status dos lotes já marcados como vendidos
+                const result = parsedData.map(item => {
+                    // Se o item já estava marcado como vendido, manter esse status
+                    if (existingSoldItems.includes(item.item)) {
+                        item.status = 'vendido';
+                    }
+                    return item;
+                });
+
+                // Agora aplicar detecção baseada em texto para novos lotes
+                return result.map(item => {
+                    // Se o item não estava marcado como vendido anteriormente, aplicar detecção
+                    if (item.status !== 'vendido') {
+                        // Detectar por texto "VENDIDO" próximo ao item
+                        const textAround = JSON.stringify(item).toUpperCase();
+                        if (textAround.includes('VENDIDO') || textAround.includes('INDISPONIVEL') || 
+                            textAround.includes('VEND') || textAround.includes('INDISP')) {
+                            item.status = 'vendido';
+                        }
+                        
+                        // Detectar por padrões específicos de formatação
+                        // Muitos PDFs usam padrões como "R$ 0,00" ou valores zerados para lotes vendidos
+                        if (item.total === '0,00' || item.total === '0' || 
+                            item.sinal === '0,00' || item.sinal === '0') {
+                            item.status = 'vendido';
+                        }
+                    }
+                    
+                    return item;
+                });
+            }
+
+            function parseAndLoad(text) {
+                const newData = [];
+                // Limpar e normalizar o texto
+                let cleanText = text.replace(/R\$\s*/gi, '').replace(/\t/g, ' ').replace(/\r/g, ' ').replace(/\n/g, ' ').replace(/\s+/g, ' ');
+
+                // Regex para capturar todos os campos na ordem correta:
+                // ITEM, QD, LT, Tam m2, Total, Sinal a vista, Reserva, saldo a vista, saldo em 2 x, saldo em 3 x, Saldo 60 meses, 120 meses ,156 meses, 160 meses
+                const regex = /(\d+)\s+([A-Z])\s+(\d+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)/g;
+                let match;
+
+                while ((match = regex.exec(cleanText)) !== null) {
+                    // Status padrão é disponível - a detecção de cores vai ajustar depois
+                    let status = 'disponivel';
+
+                    newData.push({
+                        item: match[1], 
+                        qd: match[2], 
+                        lt: match[3], 
+                        tam: match[4], 
+                        m2: match[5],
+                        total: match[6] || '-', 
+                        sinal: match[7] || '-', 
+                        sinalVista: match[8] || '-',
+                        reserva: match[9] || '-', 
+                        saldoVista: match[10] || '-', 
+                        saldo2x: match[11] || '-',
+                        saldo3x: match[12] || '-', 
+                        saldo60: match[13] || '-', 
+                        p120: match[14] || '-',
+                        p156: match[15] || '-', 
+                        p160: match[16] || '-',
+                        status: status
+                    });
+                }
+
+                // Se a regex anterior não funcionar, tentar uma abordagem mais flexível
+                if (newData.length === 0) {
+                    console.log("Tentando abordagem alternativa...");
+                    const altRegex = /(\d+)\s+([A-Z])\s+(\d+)\s+([\d.,]+)\s+([\d.,]+)/g;
+                    let altMatch;
+                    
+                    while ((altMatch = altRegex.exec(cleanText)) !== null) {
+                        const lookAhead = cleanText.substring(altRegex.lastIndex, altRegex.lastIndex + 1500);
+                        const moneys = lookAhead.match(/([\d.,]+)/g) || [];
+                        
+                        let status = 'disponivel';
+
+                        if (moneys.length >= 14) {
+                            newData.push({
+                                item: altMatch[1], 
+                                qd: altMatch[2], 
+                                lt: altMatch[3], 
+                                tam: altMatch[4], 
+                                m2: altMatch[5],
+                                total: moneys[0] || '-', 
+                                sinal: moneys[1] || '-', 
+                                sinalVista: moneys[2] || '-',
+                                reserva: moneys[3] || '-', 
+                                saldoVista: moneys[4] || '-', 
+                                saldo2x: moneys[5] || '-',
+                                saldo3x: moneys[6] || '-', 
+                                saldo60: moneys[7] || '-', 
+                                p120: moneys[8] || '-',
+                                p156: moneys[9] || '-', 
+                                p160: moneys[10] || '-',
+                                status: status
+                            });
+                        }
+                    }
+                }
+
+                if (newData.length === 0) {
+                    alert('Erro ao identificar tabela. Verifique se o PDF contém a tabela com os campos solicitados.');
+                }
+                
+                return newData;
+            }
+
+            // Sistema de Backup
+            document.getElementById('backupButton').addEventListener('click', () => {
+                if (database.length === 0) {
+                    alert('Não há dados para fazer backup.');
+                    return;
+                }
+                
+                const backupData = {
+                    database: database,
+                    timestamp: new Date().toISOString(),
+                    version: '4.8'
+                };
+                
+                const dataStr = JSON.stringify(backupData, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `backup_reserva_foz_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                alert('Backup realizado com sucesso!');
+            });
+
+            document.getElementById('restoreButton').addEventListener('click', () => {
+                document.getElementById('restoreFileInput').click();
+            });
+
+            document.getElementById('restoreFileInput').addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const backupData = JSON.parse(e.target.result);
+                        
+                        if (backupData.database && Array.isArray(backupData.database)) {
+                            if (confirm(`Deseja restaurar backup com ${backupData.database.length} lotes?`)) {
+                                database = backupData.database;
+                                saveAndRender();
+                                alert('Backup restaurado com sucesso!');
+                            }
+                        } else {
+                            alert('Arquivo de backup inválido.');
+                        }
+                    } catch (error) {
+                        alert('Erro ao ler arquivo de backup: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+                event.target.value = ''; // Reset input
+            });
+
+            // Ação de mudar status (Manual + Bulk)
+            window.toggleStatus = function(item) {
+                const idx = database.findIndex(l => l.item === item);
+                if (idx >= 0) {
+                    database[idx].status = database[idx].status === 'vendido' ? 'disponivel' : 'vendido';
+                    saveAndRender();
+                }
+            };
+
+            document.getElementById('markSoldButton').addEventListener('click', () => {
+                const ids = document.getElementById('soldItemsInput').value.split(/[\s,]+/).map(s => s.trim());
+                let count = 0;
+                database.forEach(l => {
+                    if (ids.includes(l.item)) { l.status = 'vendido'; count++; }
+                });
+                if (count > 0) {
+                    saveAndRender();
+                    document.getElementById('soldItemsInput').value = '';
+                    alert(`${count} marcados como VENDIDO.`);
+                }
+            });
+
+            // Renderização
+            function saveAndRender() {
+                localStorage.setItem('reservaFoz_db4', JSON.stringify(database));
+                updateStats();
+                filterLotes();
+            }
+
+            function updateStats() {
+                const total = database.length;
+                const sold = database.filter(l => l.status === 'vendido');
+                const avail = database.filter(l => l.status !== 'vendido');
+
+                // Texto
+                document.getElementById('totalCount').innerText = total;
+                document.getElementById('availCount').innerText = avail.length;
+                document.getElementById('soldCount').innerText = sold.length;
+
+                // 1. Chart Quantidade
+                charts.qty.data.datasets[0].data = [avail.length, sold.length];
+                charts.qty.update();
+
+                // 2. Chart Quadras (Disponíveis)
+                const quadraCounts = {};
+                avail.forEach(l => {
+                    quadraCounts[l.qd] = (quadraCounts[l.qd] || 0) + 1;
+                });
+                
+                const sortedQuadras = Object.keys(quadraCounts).sort();
+                charts.quadra.data.labels = sortedQuadras;
+                charts.quadra.data.datasets[0].data = sortedQuadras.map(q => quadraCounts[q]);
+                charts.quadra.update();
+
+                // 3. Chart Financeiro
+                const sumVal = (arr) => arr.reduce((acc, l) => {
+                    let v = parseFloat(l.total.replace(/\./g,'').replace(',','.'));
+                    return acc + (isNaN(v) ? 0 : v);
+                }, 0);
+                charts.fin.data.datasets[0].data = [sumVal(avail), sumVal(sold)];
+                charts.fin.update();
+                
+                // 4. Valor Médio Geral
+                const allValues = database.map(l => {
+                    return parseFloat(l.total.replace(/\./g,'').replace(',','.')) || 0;
+                });
+                const avgValue = allValues.reduce((acc, val) => acc + val, 0) / allValues.length;
+                
+                if (!isNaN(avgValue)) {
+                    document.getElementById('avgTotalValue').textContent = 
+                        'R$ ' + avgValue.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                } else {
+                    document.getElementById('avgTotalValue').textContent = 'R$ 0,00';
+                }
+            }
+
+            function filterLotes() {
+                const sLote = document.getElementById('searchLote').value.toLowerCase();
+                const sQuadra = document.getElementById('searchQuadra').value.toUpperCase();
+                const status = document.getElementById('filterStatus').value;
+                const sort = document.getElementById('sortSelect').value;
+
+                let res = database.filter(l => {
+                    const match = l.lt.includes(sLote) && (l.qd.includes(sQuadra) || sQuadra === '');
+                    if (status === 'todos') return match;
+                    return match && l.status === status;
+                });
+
+                res.sort((a,b) => {
+                    if (sort === 'quadra') return a.qd.localeCompare(b.qd) || parseInt(a.lt) - parseInt(b.lt);
+                    if (sort === 'valor') {
+                        const vA = parseFloat(a.total.replace(/\./g,'').replace(',','.')) || 0;
+                        const vB = parseFloat(b.total.replace(/\./g,'').replace(',','.')) || 0;
+                        return vA - vB;
+                    }
+                });
+
+                const container = document.getElementById('resultsContainer');
+                container.innerHTML = '';
+                
+                if (res.length === 0) container.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-size:0.9rem;">Nenhum lote encontrado.</p>';
+
+                res.forEach(l => {
+                    const isSold = l.status === 'vendido';
+                    const div = document.createElement('div');
+                    div.className = `lot-card ${l.status}`;
+                    
+                    // O onclick no DIV abre o modal
+                    div.onclick = () => openModal(l);
+
+                    div.innerHTML = `
+                        <div class="lot-card-header">
+                            <strong>Qd ${l.qd} - Lt ${l.lt}</strong>
+                            <div style="text-align:right">
+                                <span class="status-badge" style="color:#333">${isSold ? 'VENDIDO' : 'DISPONÍVEL'}</span>
+                            </div>
+                        </div>
+                        <div class="lot-body">
+                            <div class="lot-info-row"><span>Área:</span> <b>${l.tam} m²</b></div>
+                            <div class="lot-info-row"><span>Total:</span> <b>${l.total}</b></div>
+                            <div class="lot-info-row"><span>Sinal:</span> <b>${l.sinal}</b></div>
+                        </div>
+                        <button class="btn-action-card" 
+                            onclick="event.stopPropagation(); toggleStatus('${l.item}')" 
+                            title="Mudar Status Rápido">
+                            ${isSold ? '<i class="fas fa-undo"></i> Disponível' : '<i class="fas fa-check"></i> Vendido'}
+                        </button>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            // Modal Logic
+            window.openModal = function(lote) {
+                document.getElementById('modalTitle').innerText = `Detalhes: Quadra ${lote.qd} - Lote ${lote.lt}`;
+                const fields = [
+                    'mQuadraLote', 'mItem', 'mTam', 'mM2', 'mTotal', 
+                    'mSinal', 'mSinalVista', 'mReserva', 'mSaldoVista', 
+                    'mSaldo2x', 'mSaldo3x', 'mSaldo60', 'm120', 'm156', 'm160'
+                ];
+                const values = [
+                    `${lote.qd} / ${lote.lt}`, lote.item, lote.tam, lote.m2, lote.total,
+                    lote.sinal, lote.sinalVista, lote.reserva, lote.saldoVista,
+                    lote.saldo2x, lote.saldo3x, lote.saldo60, lote.p120, lote.p156, lote.p160
+                ];
+                fields.forEach((id, i) => document.getElementById(id).innerText = values[i] || '-');
+                document.getElementById('detailModal').style.display = 'flex';
+            };
+
+            window.closeModal = function() { document.getElementById('detailModal').style.display = 'none'; };
+
+            // Listeners
+            ['searchLote', 'searchQuadra', 'filterStatus', 'sortSelect'].forEach(id => {
+                document.getElementById(id).addEventListener('input', filterLotes);
+            });
+            
+            document.getElementById('clearButton').addEventListener('click', () => {
+                if(confirm('Limpar tudo?')) { localStorage.removeItem('reservaFoz_db4'); database=[]; saveAndRender(); }
+            });
+
+            // Exportação PDF otimizada com melhor aproveitamento de espaço
+            document.getElementById('downloadFullPdf').addEventListener('click', () => {
+                if (database.length === 0) return alert('Sem dados para exportar.');
+                
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('l', 'mm', 'a4'); 
+                
+                // Configurações otimizadas para melhor aproveitamento
+                doc.setFontSize(16);
+                doc.setTextColor(27, 77, 62);
+                doc.text("Tabela de Disponibilidade - Reserva da Foz", 15, 12);
+                doc.setFontSize(10);
+                doc.text(`Gerado em: ${new Date().toLocaleDateString()}`, 15, 18);
+
+                // Preparar dados - apenas lotes disponíveis
+                const list = database
+                    .filter(l => l.status !== 'vendido')
+                    .sort((a,b) => a.qd.localeCompare(b.qd) || parseInt(a.lt) - parseInt(b.lt));
+
+                // Criar corpo da tabela com todas as colunas
+                const body = list.map(l => [
+                    l.item, 
+                    l.qd, 
+                    l.lt, 
+                    l.tam, 
+                    l.total, 
+                    l.sinal, 
+                    l.sinalVista,
+                    l.reserva, 
+                    l.saldoVista, 
+                    l.saldo2x,
+                    l.saldo3x,
+                    l.saldo60,
+                    l.p120,
+                    l.p156,
+                    l.p160
+                ]);
+
+                // Configurar a tabela com melhor aproveitamento de espaço
+                doc.autoTable({
+                    head: [
+                        ['Item', 'Qd', 'Lt', 'M²', 'Total', 'Sinal', 'Sinal Vista', 'Reserva', 
+                         'Saldo Vista', 'Saldo 2x', 'Saldo 3x', 'Saldo 60', '120x', '156x', '160x']
+                    ],
+                    body: body,
+                    startY: 22,
+                    styles: { 
+                        fontSize: 7, // Fonte um pouco maior para melhor legibilidade
+                        cellPadding: 2,
+                        lineColor: [200, 200, 200],
+                        lineWidth: 0.1,
+                        font: 'helvetica'
+                    },
+                    headStyles: { 
+                        fillColor: [27, 77, 62],
+                        textColor: [255, 255, 255],
+                        fontSize: 7,
+                        fontStyle: 'bold',
+                        cellPadding: 3
+                    },
+                    alternateRowStyles: { 
+                        fillColor: [241, 248, 244] 
+                    },
+                    margin: { left: 8, right: 8, top: 22 }, // Margens otimizadas
+                    tableWidth: 'wrap',
+                    columnStyles: {
+                        0: { cellWidth: 14 }, // Item
+                        1: { cellWidth: 12 }, // Qd
+                        2: { cellWidth: 12 }, // Lt
+                        3: { cellWidth: 16 }, // M²
+                        4: { cellWidth: 22 }, // Total
+                        5: { cellWidth: 18 }, // Sinal
+                        6: { cellWidth: 20 }, // Sinal Vista
+                        7: { cellWidth: 18 }, // Reserva
+                        8: { cellWidth: 20 }, // Saldo Vista
+                        9: { cellWidth: 18 }, // Saldo 2x
+                        10: { cellWidth: 18 }, // Saldo 3x
+                        11: { cellWidth: 18 }, // Saldo 60
+                        12: { cellWidth: 16 }, // 120x
+                        13: { cellWidth: 16 }, // 156x
+                        14: { cellWidth: 16 }  // 160x
+                    },
+                    // Ajustes para melhor quebra de texto
+                    didDrawPage: function (data) {
+                        // Adicionar número da página
+                        doc.setFontSize(8);
+                        doc.setTextColor(100);
+                        doc.text(
+                            `Página ${data.pageNumber}`,
+                            data.settings.margin.left,
+                            doc.internal.pageSize.height - 10
+                        );
+                    }
+                });
+
+                doc.save(`Tabela_Disponiveis_${new Date().toISOString().split('T')[0]}.pdf`);
+            });
+
+            // Init
+            initCharts();
+            const saved = localStorage.getItem('reservaFoz_db4');
+            if (saved) { database = JSON.parse(saved); saveAndRender(); }
+        });
+    </script>
+</body>
+</html>
