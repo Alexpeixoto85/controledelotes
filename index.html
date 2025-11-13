@@ -540,6 +540,17 @@
             display: block;
         }
 
+        /* Mensagem de aviso */
+        .warning-message {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.8rem;
+        }
+
         @media (max-width: 900px) { 
             .main-grid { grid-template-columns: 1fr; } 
             .detail-grid { grid-template-columns: 1fr; } 
@@ -778,6 +789,10 @@
                 <button class="close-modal" onclick="closeClienteModal()">&times;</button>
             </div>
             <div class="modal-body">
+                <div class="warning-message">
+                    <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Só é possível relacionar clientes a lotes disponíveis. Lotes vendidos não aparecerão na lista.
+                </div>
+                
                 <div class="form-group">
                     <label class="form-label">Nome Completo *</label>
                     <input type="text" id="clienteNome" class="form-control" placeholder="Nome do cliente">
@@ -793,8 +808,11 @@
                 <div class="form-group">
                     <label class="form-label">Lote de Interesse *</label>
                     <select id="clienteLote" class="form-control">
-                        <option value="">Selecione um lote</option>
+                        <option value="">Selecione um lote disponível</option>
                     </select>
+                    <div id="loteInfo" style="margin-top: 5px; font-size: 0.75rem; color: #666; display: none;">
+                        <span id="loteDetails"></span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Observações</label>
@@ -1356,6 +1374,15 @@
                 if (idx >= 0) {
                     database[idx].status = database[idx].status === 'vendido' ? 'disponivel' : 'vendido';
                     saveAndRender();
+                    updateLoteSelect(); // Atualizar lista de lotes disponíveis
+                    
+                    // Verificar se algum cliente está relacionado a este lote
+                    if (database[idx].status === 'vendido') {
+                        const clientesComEsteLote = clientes.filter(c => c.loteId === item);
+                        if (clientesComEsteLote.length > 0) {
+                            alert(`Atenção: ${clientesComEsteLote.length} cliente(s) está(ão) relacionado(s) a este lote que foi marcado como vendido.`);
+                        }
+                    }
                 }
             };
 
@@ -1363,10 +1390,14 @@
                 const ids = document.getElementById('soldItemsInput').value.split(/[\s,]+/).map(s => s.trim());
                 let count = 0;
                 database.forEach(l => {
-                    if (ids.includes(l.item)) { l.status = 'vendido'; count++; }
+                    if (ids.includes(l.item)) { 
+                        l.status = 'vendido'; 
+                        count++; 
+                    }
                 });
                 if (count > 0) {
                     saveAndRender();
+                    updateLoteSelect(); // Atualizar lista de lotes disponíveis
                     document.getElementById('soldItemsInput').value = '';
                     alert(`${count} marcados como VENDIDO.`);
                 }
@@ -1393,6 +1424,12 @@
                 const lote = database.find(l => l.item === loteId);
                 if (!lote) {
                     alert('Lote selecionado não encontrado.');
+                    return;
+                }
+                
+                // VALIDAÇÃO: Verificar se o lote está disponível
+                if (lote.status !== 'disponivel') {
+                    alert('Erro: O lote selecionado não está disponível para venda. Por favor, selecione um lote disponível.');
                     return;
                 }
                 
@@ -1434,26 +1471,53 @@
                 alert(editingClienteId ? 'Cliente atualizado com sucesso!' : 'Cliente cadastrado com sucesso!');
             });
 
-            // Atualizar select de lotes
+            // Atualizar select de lotes - MOSTRAR APENAS LOTES DISPONÍVEIS
             function updateLoteSelect() {
                 const select = document.getElementById('clienteLote');
                 const filterSelect = document.getElementById('filterClienteLote');
                 
-                select.innerHTML = '<option value="">Selecione um lote</option>';
+                select.innerHTML = '<option value="">Selecione um lote disponível</option>';
                 filterSelect.innerHTML = '<option value="todos">Todos os lotes</option>';
                 
+                // Filtrar apenas lotes disponíveis
                 const lotesDisponiveis = database.filter(l => l.status === 'disponivel');
                 
-                lotesDisponiveis.forEach(lote => {
+                if (lotesDisponiveis.length === 0) {
                     const option = document.createElement('option');
-                    option.value = lote.item;
-                    option.textContent = `Qd ${lote.qd} - Lt ${lote.lt} (${lote.tam}m² - ${lote.total})`;
+                    option.value = "";
+                    option.textContent = "Nenhum lote disponível";
+                    option.disabled = true;
                     select.appendChild(option);
+                } else {
+                    lotesDisponiveis.forEach(lote => {
+                        const option = document.createElement('option');
+                        option.value = lote.item;
+                        option.textContent = `Qd ${lote.qd} - Lt ${lote.lt} (${lote.tam}m² - ${lote.total})`;
+                        option.setAttribute('data-lote-info', JSON.stringify(lote));
+                        select.appendChild(option);
+                        
+                        const filterOption = document.createElement('option');
+                        filterOption.value = lote.item;
+                        filterOption.textContent = `Qd ${lote.qd} - Lt ${lote.lt}`;
+                        filterSelect.appendChild(filterOption);
+                    });
+                }
+                
+                // Adicionar evento para mostrar detalhes do lote selecionado
+                select.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const loteInfoDiv = document.getElementById('loteInfo');
+                    const loteDetailsSpan = document.getElementById('loteDetails');
                     
-                    const filterOption = document.createElement('option');
-                    filterOption.value = lote.item;
-                    filterOption.textContent = `Qd ${lote.qd} - Lt ${lote.lt}`;
-                    filterSelect.appendChild(filterOption);
+                    if (this.value && selectedOption.getAttribute('data-lote-info')) {
+                        const lote = JSON.parse(selectedOption.getAttribute('data-lote-info'));
+                        loteDetailsSpan.innerHTML = `
+                            <strong>Detalhes do Lote:</strong> ${lote.tam}m² | Valor m²: ${lote.m2} | Total: ${lote.total}
+                        `;
+                        loteInfoDiv.style.display = 'block';
+                    } else {
+                        loteInfoDiv.style.display = 'none';
+                    }
                 });
             }
 
@@ -1494,16 +1558,22 @@
                     const div = document.createElement('div');
                     div.className = 'cliente-card';
                     
+                    // Verificar se o lote ainda está disponível
+                    const lote = database.find(l => l.item === cliente.loteId);
+                    const loteDisponivel = lote && lote.status === 'disponivel';
+                    
                     div.innerHTML = `
                         <div class="cliente-header">
                             <div class="cliente-nome">${cliente.nome}</div>
+                            ${!loteDisponivel ? '<span style="color: var(--danger-color); font-size: 0.7rem;"><i class="fas fa-exclamation-triangle"></i> Lote Vendido</span>' : ''}
                         </div>
                         <div class="cliente-contato">
                             <div><i class="fas fa-phone"></i> ${cliente.telefone || 'Não informado'}</div>
                             <div><i class="fas fa-envelope"></i> ${cliente.email || 'Não informado'}</div>
                         </div>
-                        <div class="cliente-lote">
+                        <div class="cliente-lote" style="${!loteDisponivel ? 'background: #ffebee; color: #c62828;' : ''}">
                             <i class="fas fa-home"></i> Lote: ${cliente.loteInfo}
+                            ${lote ? ` (${lote.tam}m² - ${lote.total})` : ''}
                         </div>
                         ${cliente.observacoes ? `
                             <div class="cliente-obs">
@@ -1514,7 +1584,7 @@
                             <button class="btn-sm btn-primary" onclick="gerarFichaCliente('${cliente.id}')">
                                 <i class="fas fa-download"></i> Ficha PDF
                             </button>
-                            <button class="btn-sm btn-outline" onclick="editarCliente('${cliente.id}')">
+                            <button class="btn-sm btn-outline" onclick="editarCliente('${cliente.id}')" ${!loteDisponivel ? 'disabled style="opacity: 0.5;"' : ''}>
                                 <i class="fas fa-edit"></i> Editar
                             </button>
                             <button class="btn-sm btn-danger" onclick="excluirCliente('${cliente.id}')">
@@ -1547,6 +1617,14 @@
                 const cliente = clientes.find(c => c.id === clienteId);
                 if (!cliente) return;
                 
+                // Verificar se o lote ainda está disponível
+                const lote = database.find(l => l.item === cliente.loteId);
+                if (lote && lote.status !== 'disponivel') {
+                    if (!confirm('Atenção: O lote relacionado a este cliente não está mais disponível. Deseja continuar com a edição?')) {
+                        return;
+                    }
+                }
+                
                 document.getElementById('clienteNome').value = cliente.nome;
                 document.getElementById('clienteTelefone').value = cliente.telefone;
                 document.getElementById('clienteEmail').value = cliente.email;
@@ -1570,6 +1648,7 @@
             // Abrir modal de cliente
             window.openClienteModal = function() {
                 document.getElementById('clienteModal').style.display = 'flex';
+                updateLoteSelect(); // Atualizar lista sempre que abrir o modal
             };
 
             // Fechar modal de cliente
@@ -1581,6 +1660,7 @@
                 document.getElementById('clienteEmail').value = '';
                 document.getElementById('clienteLote').value = '';
                 document.getElementById('clienteObservacoes').value = '';
+                document.getElementById('loteInfo').style.display = 'none';
                 editingClienteId = null;
             };
 
