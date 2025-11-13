@@ -12,6 +12,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- Importar fontes do Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             /* Paleta Amazônia */
@@ -34,7 +39,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Open Sans', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-dark);
             padding: 20px;
@@ -44,7 +49,7 @@
         
         .container { max-width: 1400px; margin: 0 auto; }
         
-        /* Header */
+        /* Header - Nova Identidade Visual */
         header {
             background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
             padding: 25px;
@@ -53,6 +58,55 @@
             margin-bottom: 20px;
             text-align: center;
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-main {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 2.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            line-height: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .logo-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+        
+        .logo-location {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 400;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            padding: 5px 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .header-decoration {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, #8c6239, #a87c52, #8c6239);
+            opacity: 0.8;
         }
         
         /* Layout Grid */
@@ -91,6 +145,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            font-family: 'Montserrat', sans-serif;
         }
 
         /* Botões */
@@ -107,6 +162,7 @@
             justify-content: center;
             gap: 6px;
             width: 100%;
+            font-family: 'Montserrat', sans-serif;
         }
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-light); transform: translateY(-2px); }
@@ -137,7 +193,7 @@
         
         /* Formulários */
         .form-group { margin-bottom: 12px; }
-        .form-label { display: block; font-size: 0.8rem; margin-bottom: 4px; color: #555; font-weight: 600; }
+        .form-label { display: block; font-size: 0.8rem; margin-bottom: 4px; color: #555; font-weight: 600; font-family: 'Montserrat', sans-serif; }
         .form-control { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.85rem; }
         textarea.form-control { min-height: 80px; resize: vertical; }
 
@@ -330,6 +386,8 @@
         .ficha-title {
             font-size: 1.8rem;
             margin-bottom: 5px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
         }
 
         .ficha-subtitle {
@@ -357,6 +415,7 @@
             font-size: 1.1rem;
             border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .ficha-info {
@@ -456,6 +515,7 @@
             font-weight: bold;
             color: var(--primary-color);
             font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .cliente-contato {
@@ -510,6 +570,7 @@
             color: var(--primary-color);
             font-size: 1.3rem;
             font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
         }
 
         /* Abas */
@@ -525,6 +586,7 @@
             border-bottom: 3px solid transparent;
             transition: var(--transition);
             font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .tab.active {
@@ -572,6 +634,15 @@
             .clientes-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .logo-main {
+                font-size: 2rem;
+            }
+            
+            .logo-subtitle {
+                font-size: 1rem;
+                letter-spacing: 2px;
+            }
         }
     </style>
 </head>
@@ -579,8 +650,12 @@
 
     <div class="container">
         <header>
-            <h1><i class="fas fa-tree"></i> Reserva da Foz</h1>
-            <p>Gestão de Estoque e Clientes</p>
+            <div class="logo-container">
+                <div class="logo-main">RESERVA DA FOZ</div>
+                <div class="logo-subtitle">ROTA DOS MILAGRES - ALAGOAS</div>
+                <div class="logo-location">Gestão de Estoque e Clientes</div>
+            </div>
+            <div class="header-decoration"></div>
         </header>
 
         <!-- Card de Controle de Modo Simplificado -->
@@ -833,7 +908,7 @@
     <!-- Ficha para Impressão/PDF (oculta) -->
     <div class="print-ficha" id="printFicha">
         <div class="ficha-header">
-            <h1 class="ficha-title">Reserva da Foz</h1>
+            <h1 class="ficha-title">RESERVA DA FOZ</h1>
             <div class="ficha-subtitle">Ficha Técnica do Lote</div>
         </div>
 
@@ -937,7 +1012,7 @@
         </div>
 
         <div class="ficha-footer">
-            <p>Reserva da Foz - Sistema de Gestão de Lotes | Gerado em <span id="fichaGeradoEm">-</span></p>
+            <p>RESERVA DA FOZ - Sistema de Gestão de Lotes | Gerado em <span id="fichaGeradoEm">-</span></p>
             <p>www.reservadafoz.com.br | contato@reservadafoz.com.br</p>
         </div>
     </div>
@@ -945,7 +1020,7 @@
     <!-- Ficha do Cliente para Impressão/PDF (oculta) -->
     <div class="print-ficha" id="printFichaCliente">
         <div class="ficha-header">
-            <h1 class="ficha-title">Reserva da Foz</h1>
+            <h1 class="ficha-title">RESERVA DA FOZ</h1>
             <div class="ficha-subtitle">Ficha do Cliente</div>
         </div>
 
@@ -999,7 +1074,7 @@
         </div>
 
         <div class="ficha-footer">
-            <p>Reserva da Foz - Sistema de Gestão de Clientes | Gerado em <span id="fichaClienteGeradoEm">-</span></p>
+            <p>RESERVA DA FOZ - Sistema de Gestão de Clientes | Gerado em <span id="fichaClienteGeradoEm">-</span></p>
             <p>www.reservadafoz.com.br | contato@reservadafoz.com.br</p>
         </div>
     </div>
@@ -1983,7 +2058,7 @@
                 // Configurações otimizadas para melhor aproveitamento
                 doc.setFontSize(16);
                 doc.setTextColor(27, 77, 62);
-                doc.text("Tabela de Disponibilidade - Reserva da Foz", 15, 12);
+                doc.text("Tabela de Disponibilidade - RESERVA DA FOZ", 15, 12);
                 doc.setFontSize(10);
                 doc.text(`Gerado em: ${new Date().toLocaleDateString()}`, 15, 18);
 
