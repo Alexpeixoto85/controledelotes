@@ -1,21 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reserva da Foz - Sistema Integrado</title>
+    <title>Reserva da Foz - Sistema Integrado Completo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Importar fontes do Google -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -39,7 +33,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
-            font-family: 'Open Sans', sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-dark);
             padding: 20px;
@@ -49,7 +43,7 @@
         
         .container { max-width: 1400px; margin: 0 auto; }
         
-        /* Header - Nova Identidade Visual */
+        /* Header */
         header {
             background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
             padding: 25px;
@@ -58,55 +52,6 @@
             margin-bottom: 20px;
             text-align: center;
             color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .logo-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .logo-main {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-            font-size: 2.8rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            line-height: 1;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .logo-subtitle {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 500;
-            font-size: 1.2rem;
-            letter-spacing: 4px;
-            margin-top: 5px;
-            opacity: 0.9;
-        }
-        
-        .logo-location {
-            font-family: 'Open Sans', sans-serif;
-            font-weight: 400;
-            font-size: 0.9rem;
-            margin-top: 8px;
-            padding: 5px 15px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            display: inline-block;
-        }
-        
-        .header-decoration {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 10px;
-            background: linear-gradient(90deg, #8c6239, #a87c52, #8c6239);
-            opacity: 0.8;
         }
         
         /* Layout Grid */
@@ -131,9 +76,7 @@
             transition: var(--transition);
         }
         
-        .card.hidden {
-            display: none;
-        }
+        .card.hidden { display: none; }
         
         .card h2 {
             color: var(--primary-color);
@@ -145,7 +88,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-family: 'Montserrat', sans-serif;
         }
 
         /* Botões */
@@ -162,7 +104,6 @@
             justify-content: center;
             gap: 6px;
             width: 100%;
-            font-family: 'Montserrat', sans-serif;
         }
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-light); transform: translateY(-2px); }
@@ -171,9 +112,7 @@
         .btn-outline { border: 2px solid var(--primary-color); color: var(--primary-color); background: transparent; }
         .btn-outline:hover { background: var(--primary-color); color: white; }
         .btn-warning { background-color: #e9b949; color: white; }
-        .btn-warning:hover { background-color: #d4a235; }
         
-        /* Botão pequeno para ação rápida */
         .btn-sm { padding: 4px 8px; font-size: 0.75rem; width: auto; margin: 0; }
         .btn-action-card { 
             border: 1px solid #ccc; color: #555; background: #f8f9fa; 
@@ -193,23 +132,19 @@
         
         /* Formulários */
         .form-group { margin-bottom: 12px; }
-        .form-label { display: block; font-size: 0.8rem; margin-bottom: 4px; color: #555; font-weight: 600; font-family: 'Montserrat', sans-serif; }
+        .form-label { display: block; font-size: 0.8rem; margin-bottom: 4px; color: #555; font-weight: 600; }
         .form-control { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.85rem; }
         textarea.form-control { min-height: 80px; resize: vertical; }
 
-        /* Gráficos */
+        /* Gráficos e Cards */
         .chart-wrapper { position: relative; height: 170px; margin-bottom: 15px; }
-
-        /* Cards de Lotes */
-        #resultsContainer {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px;
-        }
+        #resultsContainer { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; }
+        
         .lot-card {
             background: white; border-radius: var(--border-radius);
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: var(--transition);
             border: 1px solid #eee; cursor: pointer; position: relative;
-            display: flex; flex-direction: column;
-            padding-bottom: 45px;
+            display: flex; flex-direction: column; padding-bottom: 45px;
         }
         .lot-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .lot-card-header { padding: 12px; color: white; display: flex; justify-content: space-between; border-radius: 10px 10px 0 0; }
@@ -220,7 +155,7 @@
         .lot-body { padding: 12px; font-size: 0.8rem; flex-grow: 1; }
         .lot-info-row { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px dashed #eee; padding-bottom: 3px; }
         
-        /* MODAL (Ficha Técnica) */
+        /* MODAL */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;
@@ -232,417 +167,85 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: slideUp 0.3s ease;
         }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
-        .modal-header {
-            background: var(--primary-color); color: white; padding: 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0;
-        }
+        .modal-header { background: var(--primary-color); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; }
         .modal-body { padding: 18px; }
-        .detail-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); 
-            gap: 10px; 
-        }
+        .close-modal { background: none; border: none; color: white; font-size: 1.3rem; cursor: pointer; width: auto; margin: 0; }
+        
+        .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
         .detail-item { background: #f8f9fa; padding: 8px; border-radius: 6px; }
         .detail-label { font-size: 0.7rem; color: #666; display: block; }
         .detail-value { font-size: 0.85rem; font-weight: bold; color: var(--primary-color); display: block; }
-        .close-modal { background: none; border: none; color: white; font-size: 1.3rem; cursor: pointer; width: auto; margin: 0; }
 
-        /* Status Badge */
-        .status-badge {
-            background: rgba(255,255,255,0.9); color: #333;
-            padding: 3px 7px; border-radius: 10px; font-size: 0.65rem; font-weight: bold;
-        }
-
-        /* Sales Input Area */
+        /* Layouts Especiais */
+        .status-badge { background: rgba(255,255,255,0.9); color: #333; padding: 3px 7px; border-radius: 10px; font-size: 0.65rem; font-weight: bold; }
         .sales-input-area { background-color: #ffedea; border: 1px solid #ffcccb; padding: 12px; border-radius: 10px; margin-top: 15px; }
-        .sales-input { width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #eeb4b4; border-radius: 6px; font-size: 0.85rem; }
-
-        /* Valor Médio */
+        
         .avg-value-card {
-            background: linear-gradient(135deg, #8c6239, #a87c52);
-            color: white;
-            text-align: center;
-            padding: 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 18px;
-            box-shadow: var(--box-shadow);
+            background: linear-gradient(135deg, #8c6239, #a87c52); color: white; text-align: center;
+            padding: 15px; border-radius: var(--border-radius); margin-bottom: 18px; box-shadow: var(--box-shadow);
         }
-        .avg-value-card h3 {
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-            opacity: 0.9;
-        }
-        .avg-value-card .value {
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .avg-value-card .description {
-            font-size: 0.7rem;
-            opacity: 0.8;
-        }
-
-        /* Backup Section */
-        .backup-section {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px dashed #ddd;
-        }
-
-        /* Toggle Switch */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background-color: var(--primary-color);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(26px);
-        }
-
-        .toggle-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            color: var(--text-dark);
-        }
-
-        /* Mode Toggle Card */
+        
         .mode-toggle-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border: 1px solid #dee2e6;
-            padding: 12px 15px;
-            border-radius: var(--border-radius);
-            margin-bottom: 18px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef); border: 1px solid #dee2e6;
+            padding: 12px 15px; border-radius: var(--border-radius); margin-bottom: 18px;
+            display: flex; justify-content: space-between; align-items: center;
         }
+        
+        /* Toggle Switch */
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .toggle-slider { background-color: var(--primary-color); }
+        input:checked + .toggle-slider:before { transform: translateX(26px); }
 
-        .mode-toggle-card .toggle-label {
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        /* Ficha Individual para Impressão */
+        /* FICHAS DE IMPRESSÃO (Escondidas) */
         .print-ficha {
-            display: none;
+            display: none; /* Só aparece ao gerar imagem */
             background: white;
-            padding: 25px;
-            max-width: 800px;
-            margin: 0 auto;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 800px; /* Largura fixa para canvas */
+            padding: 30px;
+            border-radius: 0;
+            font-family: 'Arial', sans-serif;
         }
 
-        .ficha-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            color: white;
-            padding: 20px;
-            border-radius: 10px 10px 0 0;
-            text-align: center;
-            margin-bottom: 20px;
+        .ficha-print-header {
+            background: #1b4d3e; color: white; padding: 20px; text-align: center;
+            border-radius: 8px 8px 0 0; margin-bottom: 20px;
         }
+        .ficha-print-title { font-size: 24px; margin-bottom: 5px; font-weight: bold; }
+        .ficha-print-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .ficha-print-item { background: #f5f5f5; padding: 10px; border-left: 4px solid #1b4d3e; }
+        .ficha-print-label { font-size: 10px; color: #666; display: block; text-transform: uppercase; }
+        .ficha-print-value { font-size: 14px; font-weight: bold; color: #333; display: block; }
+        .ficha-print-highlight { background: #e8f5e9; padding: 15px; text-align: center; border: 1px solid #1b4d3e; margin: 20px 0; }
+        .ficha-print-footer { text-align: center; font-size: 10px; color: #999; margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px; }
 
-        .ficha-title {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
+        /* Clientes e Imobiliarias Grid */
+        .clientes-grid, .imobiliarias-grid, .relatorios-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; margin-top: 15px; }
+        
+        .cliente-card, .imobiliaria-card, .relatorio-card {
+            background: white; border-radius: var(--border-radius); padding: 15px;
+            border-left: 4px solid var(--primary-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
+        .imobiliaria-card { border-left-color: var(--secondary-color); }
 
-        .ficha-subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
+        /* Tabs */
+        .tabs { display: flex; border-bottom: 1px solid #ddd; margin-bottom: 15px; gap: 5px; }
+        .tab { padding: 10px 20px; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 600; opacity: 0.6; }
+        .tab:hover { opacity: 0.8; background: rgba(0,0,0,0.02); }
+        .tab.active { border-bottom-color: var(--primary-color); color: var(--primary-color); opacity: 1; }
+        .tab-content { display: none; animation: fadeIn 0.3s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .ficha-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .ficha-section {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .ficha-section h3 {
-            color: var(--primary-color);
-            margin-bottom: 12px;
-            font-size: 1.1rem;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .ficha-info {
-            display: grid;
-            gap: 8px;
-        }
-
-        .ficha-info-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px dashed #eee;
-        }
-
-        .ficha-label {
-            font-weight: 600;
-            color: #555;
-        }
-
-        .ficha-value {
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        .ficha-highlight {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin: 15px 0;
-        }
-
-        .ficha-total {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 5px 0;
-        }
-
-        .ficha-footer {
-            text-align: center;
-            margin-top: 25px;
-            padding-top: 15px;
-            border-top: 2px solid #eee;
-            color: #666;
-            font-size: 0.8rem;
-        }
-
-        .ficha-status {
-            display: inline-block;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .status-disponivel {
-            background-color: var(--success-color);
-            color: white;
-        }
-
-        .status-vendido {
-            background-color: var(--danger-color);
-            color: white;
-        }
-
-        /* Clientes */
-        .clientes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .cliente-card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            padding: 15px;
-            border-left: 4px solid var(--primary-color);
-            transition: var(--transition);
-        }
-
-        .cliente-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .cliente-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .cliente-nome {
-            font-weight: bold;
-            color: var(--primary-color);
-            font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .cliente-contato {
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .cliente-lote {
-            font-size: 0.8rem;
-            margin-bottom: 8px;
-            padding: 5px 10px;
-            background: #f1f8f4;
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .cliente-obs {
-            font-size: 0.8rem;
-            color: #555;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px dashed #eee;
-        }
-
-        .cliente-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .cliente-actions button {
-            flex: 1;
-            padding: 6px;
-            font-size: 0.7rem;
-        }
-
-        /* Painel de Clientes */
-        .clientes-panel {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .clientes-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .clientes-title {
-            color: var(--primary-color);
-            font-size: 1.3rem;
-            font-weight: bold;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        /* Abas */
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 15px;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: var(--transition);
-            font-weight: 600;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .tab.active {
-            border-bottom-color: var(--primary-color);
-            color: var(--primary-color);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Mensagem de aviso */
-        .warning-message {
-            background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-size: 0.8rem;
-        }
+        /* Ranking */
+        .ranking-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #eee; }
+        .ranking-position { background: var(--secondary-color); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; }
 
         @media (max-width: 900px) { 
             .main-grid { grid-template-columns: 1fr; } 
-            .detail-grid { grid-template-columns: 1fr; } 
-            
-            .mode-toggle-card {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-            
-            .mode-toggle-card .toggle-label {
-                font-size: 0.9rem;
-            }
-
-            .ficha-content {
-                grid-template-columns: 1fr;
-            }
-
-            .clientes-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .logo-main {
-                font-size: 2rem;
-            }
-            
-            .logo-subtitle {
-                font-size: 1rem;
-                letter-spacing: 2px;
-            }
+            .ficha-print-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -650,18 +253,13 @@
 
     <div class="container">
         <header>
-            <div class="logo-container">
-                <div class="logo-main">RESERVA DA FOZ</div>
-                <div class="logo-subtitle">ROTA DOS MILAGRES - ALAGOAS</div>
-                <div class="logo-location">Gestão de Estoque e Clientes</div>
-            </div>
-            <div class="header-decoration"></div>
+            <h1><i class="fas fa-tree"></i> Reserva da Foz</h1>
+            <p>Sistema de Gestão de Estoque e Parcerias</p>
         </header>
 
-        <!-- Card de Controle de Modo Simplificado -->
         <div class="mode-toggle-card">
-            <div class="toggle-label">
-                <i class="fas fa-eye-slash"></i> Modo Simplificado
+            <div class="toggle-label" style="font-weight:600; color:var(--primary-color);">
+                <i class="fas fa-eye-slash"></i> Modo Simplificado (Ocultar Painéis Laterais)
             </div>
             <label class="toggle-switch">
                 <input type="checkbox" id="simplifiedModeToggle">
@@ -669,38 +267,37 @@
             </label>
         </div>
 
-        <!-- Abas para navegação -->
         <div class="tabs">
-            <div class="tab active" data-tab="lotes">Lotes</div>
-            <div class="tab" data-tab="clientes">Clientes</div>
+            <div class="tab active" data-tab="lotes">Lotes e Mapa</div>
+            <div class="tab" data-tab="clientes">Gestão de Clientes</div>
+            <div class="tab" data-tab="imobiliarias">Imobiliárias</div>
+            <div class="tab" data-tab="relatorios">Relatórios Gerenciais</div>
         </div>
 
-        <!-- Conteúdo da aba Lotes -->
         <div class="tab-content active" id="lotes-tab">
             <div class="main-grid" id="mainGrid">
                 <div class="controls-column" id="controlsColumn">
                     <div class="card config-card">
-                        <h2><i class="fas fa-file-import"></i> Dados</h2>
+                        <h2><i class="fas fa-file-import"></i> Importar Tabela</h2>
                         <div class="file-input-wrapper">
                             <input type="file" id="pdfFileInput" accept=".pdf">
                         </div>
                         <button id="importPdfButton" class="btn-primary"><i class="fas fa-cog"></i> Processar PDF</button>
-                        <div id="loadingIndicator" style="display:none; text-align:center; margin-top:8px; color:#666; font-size:0.8rem;">Lendo arquivo...</div>
+                        <div id="loadingIndicator" style="display:none; text-align:center; margin-top:8px; color:#666; font-size:0.8rem;">Processando arquivo...</div>
                     </div>
 
-                    <!-- Card de Valor Médio Geral -->
                     <div class="avg-value-card">
-                        <h3><i class="fas fa-chart-line"></i> Valor Médio Geral</h3>
+                        <h3><i class="fas fa-chart-line"></i> Ticket Médio</h3>
                         <div class="value" id="avgTotalValue">R$ 0,00</div>
-                        <div class="description">Média de valor dos lotes</div>
+                        <div class="description">Valor médio por lote</div>
                     </div>
 
                     <div class="card">
-                        <h2><i class="fas fa-chart-pie"></i> Disponibilidade Total</h2>
+                        <h2><i class="fas fa-chart-pie"></i> Status Geral</h2>
                         <div class="chart-wrapper" style="height: 150px;">
                             <canvas id="quantityChart"></canvas>
                         </div>
-                        <div style="display:flex; justify-content:space-between; font-size:0.8rem; padding-top:8px; border-top:1px dashed #eee;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-top:10px; padding-top:8px; border-top:1px dashed #eee;">
                             <span>Total: <strong id="totalCount">0</strong></span>
                             <span style="color:var(--success-color)">Disp: <strong id="availCount">0</strong></span>
                             <span style="color:var(--danger-color)">Vend: <strong id="soldCount">0</strong></span>
@@ -708,42 +305,21 @@
                     </div>
 
                     <div class="card">
-                        <h2><i class="fas fa-building"></i> Disponíveis por Quadra</h2>
+                        <h2><i class="fas fa-building"></i> Mapa de Quadras</h2>
                         <div class="chart-wrapper" style="height: 180px;">
                             <canvas id="quadraChart"></canvas>
                         </div>
-                        <p style="font-size:0.7rem; text-align:center; color:#666;">Quantidade de lotes livres em cada quadra</p>
-                    </div>
-
-                    <div class="card">
-                        <h2><i class="fas fa-chart-line"></i> Financeiro (VGV)</h2>
-                        <div class="chart-wrapper" style="height: 150px;">
-                            <canvas id="financialChart"></canvas>
-                        </div>
-                        <p style="font-size:0.7rem; text-align:center; color:#666;">Potencial de Vendas vs. Realizado</p>
                     </div>
 
                     <div class="card config-card">
-                        <h2><i class="fas fa-tag"></i> Marcar em Massa</h2>
-                        <div class="sales-input-area">
-                            <p style="font-size:0.7rem; margin-bottom:5px;">Itens vermelhos (separados por vírgula):</p>
-                            <input type="text" id="soldItemsInput" class="sales-input" placeholder="Ex: 1, 5, 12, 34...">
-                            <button id="markSoldButton" class="btn-danger">Marcar Vendidos</button>
-                        </div>
-                    </div>
-
-                    <div class="card config-card">
-                        <h2><i class="fas fa-file-export"></i> Ações</h2>
-                        <button id="downloadFullPdf" class="btn-success"><i class="fas fa-file-pdf"></i> Exportar PDF Completo</button>
-                        
-                        <div class="backup-section">
-                            <h3 style="font-size:0.85rem; margin-bottom:8px; color:#666;"><i class="fas fa-database"></i> Backup do Sistema</h3>
-                            <button id="backupButton" class="btn-warning"><i class="fas fa-download"></i> Fazer Backup</button>
-                            <button id="restoreButton" class="btn-outline" style="margin-top:6px;"><i class="fas fa-upload"></i> Restaurar Backup</button>
+                        <h2><i class="fas fa-file-export"></i> Sistema</h2>
+                        <button id="downloadFullPdf" class="btn-success"><i class="fas fa-file-pdf"></i> Exportar Tabela PDF</button>
+                        <div style="margin-top:10px; padding-top:10px; border-top:1px dashed #ddd;">
+                            <button id="backupButton" class="btn-warning"><i class="fas fa-download"></i> Backup Dados</button>
+                            <button id="restoreButton" class="btn-outline" style="margin-top:5px;"><i class="fas fa-upload"></i> Restaurar</button>
                             <input type="file" id="restoreFileInput" accept=".json" style="display:none;">
+                            <button id="clearButton" class="btn-danger" style="margin-top:5px;"><i class="fas fa-trash"></i> Limpar Tudo</button>
                         </div>
-                        
-                        <button id="clearButton" class="btn-outline" style="margin-top:8px;"><i class="fas fa-trash"></i> Limpar Sistema</button>
                     </div>
                 </div>
 
@@ -751,22 +327,22 @@
                     <div class="card">
                         <h2><i class="fas fa-list"></i> Catálogo de Lotes</h2>
                         <div class="search-bar">
-                            <input type="text" id="searchLote" class="search-input" placeholder="Buscar Lote...">
-                            <input type="text" id="searchQuadra" class="search-input" placeholder="Quadra...">
+                            <input type="text" id="searchLote" class="search-input" placeholder="Buscar Lote (ex: 10)...">
+                            <input type="text" id="searchQuadra" class="search-input" placeholder="Quadra (ex: A)...">
                             <select id="filterStatus" class="search-input">
-                                <option value="todos">Todos</option>
+                                <option value="todos">Todos Status</option>
                                 <option value="disponivel">Disponíveis</option>
                                 <option value="vendido">Vendidos</option>
                             </select>
                             <select id="sortSelect" class="search-input">
-                                <option value="quadra">Ordenar por Quadra</option>
-                                <option value="valor">Ordenar por Valor</option>
+                                <option value="quadra">Ordem: Quadra/Lote</option>
+                                <option value="valor">Ordem: Valor Crescente</option>
                             </select>
                         </div>
                         <div id="resultsContainer">
-                            <div style="grid-column:1/-1; text-align:center; padding:30px; color:#aaa;">
-                                <i class="fas fa-folder-open" style="font-size:2.5rem; margin-bottom:8px;"></i>
-                                <p>Importe o PDF para começar.</p>
+                            <div style="grid-column:1/-1; text-align:center; padding:40px; color:#aaa;">
+                                <i class="fas fa-folder-open" style="font-size:3rem; margin-bottom:15px; opacity:0.5;"></i>
+                                <p>Importe o PDF da tabela de preços ou restaure um backup para começar.</p>
                             </div>
                         </div>
                     </div>
@@ -774,325 +350,345 @@
             </div>
         </div>
 
-        <!-- Conteúdo da aba Clientes -->
         <div class="tab-content" id="clientes-tab">
-            <div class="clientes-panel" id="clientesPanel">
-                <div class="clientes-header">
-                    <h2 class="clientes-title"><i class="fas fa-users"></i> Gestão de Clientes</h2>
-                    <button id="novoClienteBtn" class="btn-primary" style="width: auto;">
-                        <i class="fas fa-plus"></i> Novo Cliente
-                    </button>
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h2 style="margin:0; border:none;"><i class="fas fa-users"></i> Carteira de Clientes</h2>
+                    <button id="novoClienteBtn" class="btn-primary" style="width: auto;"><i class="fas fa-plus"></i> Novo Cliente</button>
                 </div>
-
-                <div class="card">
-                    <h2><i class="fas fa-users"></i> Clientes Cadastrados</h2>
-                    <div class="search-bar">
-                        <input type="text" id="searchCliente" class="search-input" placeholder="Buscar cliente...">
-                        <select id="filterClienteLote" class="search-input">
-                            <option value="todos">Todos os lotes</option>
-                        </select>
+                <div class="search-bar">
+                    <input type="text" id="searchCliente" class="search-input" placeholder="Buscar cliente por nome, email...">
+                    <select id="filterClienteImobiliaria" class="search-input">
+                        <option value="todos">Todas Imobiliárias</option>
+                    </select>
+                </div>
+                <div id="clientesContainer" class="clientes-grid">
                     </div>
-                    <div id="clientesContainer" class="clientes-grid">
-                        <div style="grid-column:1/-1; text-align:center; padding:20px; color:#aaa;">
-                            <i class="fas fa-user-plus" style="font-size:2rem; margin-bottom:8px;"></i>
-                            <p>Nenhum cliente cadastrado ainda.</p>
-                            <button id="novoClienteEmptyBtn" class="btn-primary" style="width: auto; margin-top: 10px;">
-                                <i class="fas fa-plus"></i> Cadastrar Primeiro Cliente
-                            </button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="imobiliarias-tab">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h2 style="margin:0; border:none;"><i class="fas fa-building"></i> Imobiliárias Parceiras</h2>
+                    <button id="novaImobiliariaBtn" class="btn-primary" style="width: auto;"><i class="fas fa-plus"></i> Cadastrar Imobiliária</button>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="searchImobiliaria" class="search-input" placeholder="Buscar imobiliária...">
+                </div>
+                <div id="imobiliariasContainer" class="imobiliarias-grid">
+                    </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="relatorios-tab">
+            <div class="main-grid">
+                <div class="controls-column">
+                     <div class="card">
+                        <h2><i class="fas fa-trophy"></i> Ranking de Vendas</h2>
+                        <div id="rankingImobiliarias">
+                            </div>
+                    </div>
+                </div>
+                <div class="results-column">
+                    <div class="card">
+                        <h2><i class="fas fa-file-invoice"></i> Central de Relatórios</h2>
+                        <div class="relatorios-grid">
+                            <div class="relatorio-card">
+                                <div style="text-align:center; margin-bottom:10px; font-size:2rem; color:var(--primary-color);"><i class="fas fa-chart-bar"></i></div>
+                                <h3 style="text-align:center; font-size:1rem; margin-bottom:5px;">Desempenho Imobiliárias</h3>
+                                <p style="text-align:center; font-size:0.8rem; color:#666; margin-bottom:15px;">Vendas e comissões por parceiro.</p>
+                                <button class="btn-primary" id="downloadRelatorioImobiliarias"><i class="fas fa-download"></i> Baixar PDF</button>
+                            </div>
+                            
+                            <div class="relatorio-card">
+                                <div style="text-align:center; margin-bottom:10px; font-size:2rem; color:var(--primary-color);"><i class="fas fa-user-tie"></i></div>
+                                <h3 style="text-align:center; font-size:1rem; margin-bottom:5px;">Corretores</h3>
+                                <p style="text-align:center; font-size:0.8rem; color:#666; margin-bottom:15px;">Performance individual de corretores.</p>
+                                <button class="btn-primary" id="downloadRelatorioCorretores"><i class="fas fa-download"></i> Baixar PDF</button>
+                            </div>
+
+                            <div class="relatorio-card">
+                                <div style="text-align:center; margin-bottom:10px; font-size:2rem; color:var(--primary-color);"><i class="fas fa-money-bill-wave"></i></div>
+                                <h3 style="text-align:center; font-size:1rem; margin-bottom:5px;">Financeiro Geral</h3>
+                                <p style="text-align:center; font-size:0.8rem; color:#666; margin-bottom:15px;">VGV Total, Vendido e Disponível.</p>
+                                <button class="btn-primary" id="downloadRelatorioFinanceiro"><i class="fas fa-download"></i> Baixar PDF</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
-    <!-- Modal de Detalhes do Lote -->
     <div class="modal-overlay" id="detailModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalTitle">Detalhes</h3>
+                <h3 id="modalTitle">Detalhes do Lote</h3>
                 <button class="close-modal" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="detail-grid">
-                    <div class="detail-item">
-                        <span class="detail-label">Quadra / Lote</span>
-                        <span class="detail-value" id="mQuadraLote">-</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Item Tabela</span>
-                        <span class="detail-value" id="mItem">-</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Tamanho (m²)</span>
-                        <span class="detail-value" id="mTam">-</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Valor do m²</span>
-                        <span class="detail-value" id="mM2">-</span>
-                    </div>
+                    <div class="detail-item"><span class="detail-label">Quadra / Lote</span><span class="detail-value" id="mQuadraLote">-</span></div>
+                    <div class="detail-item"><span class="detail-label">ID Tabela</span><span class="detail-value" id="mItem">-</span></div>
+                    <div class="detail-item"><span class="detail-label">Área</span><span class="detail-value" id="mTam">-</span></div>
+                    <div class="detail-item"><span class="detail-label">Valor m²</span><span class="detail-value" id="mM2">-</span></div>
+                    
                     <div class="detail-item" style="grid-column: 1/-1; background: #e8f5e9; border:1px solid #c8e6c9;">
                         <span class="detail-label">Valor Total</span>
-                        <span class="detail-value" id="mTotal" style="font-size:1.1rem; color:#2e7d32;">-</span>
+                        <span class="detail-value" id="mTotal" style="font-size:1.2rem; color:#2e7d32;">-</span>
                     </div>
                     
                     <div class="detail-item"><span class="detail-label">Sinal</span><span class="detail-value" id="mSinal">-</span></div>
-                    <div class="detail-item"><span class="detail-label">Sinal à Vista</span><span class="detail-value" id="mSinalVista">-</span></div>
-                    <div class="detail-item"><span class="detail-label">Reserva</span><span class="detail-value" id="mReserva">-</span></div>
                     <div class="detail-item"><span class="detail-label">Saldo à Vista</span><span class="detail-value" id="mSaldoVista">-</span></div>
-                    <div class="detail-item"><span class="detail-label">Saldo em 2x</span><span class="detail-value" id="mSaldo2x">-</span></div>
-                    <div class="detail-item"><span class="detail-label">Saldo em 3x</span><span class="detail-value" id="mSaldo3x">-</span></div>
-                    <div class="detail-item"><span class="detail-label">Saldo 60 meses</span><span class="detail-value" id="mSaldo60">-</span></div>
-                    <div class="detail-item"><span class="detail-label">120 Meses</span><span class="detail-value" id="m120">-</span></div>
-                    <div class="detail-item"><span class="detail-label">156 Meses</span><span class="detail-value" id="m156">-</span></div>
-                    <div class="detail-item"><span class="detail-label">160 Meses</span><span class="detail-value" id="m160">-</span></div>
+                    <div class="detail-item"><span class="detail-label">60x Mensais</span><span class="detail-value" id="mSaldo60">-</span></div>
+                    <div class="detail-item"><span class="detail-label">120x Mensais</span><span class="detail-value" id="m120">-</span></div>
                 </div>
-                <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
-                    <button id="downloadFichaButton" class="btn-success" style="width: auto;">
-                        <i class="fas fa-download"></i> Baixar Ficha em PDF
+                <div style="margin-top: 20px; text-align:center;">
+                    <button id="downloadFichaButton" class="btn-success" style="width: auto; display:inline-flex;">
+                        <i class="fas fa-print"></i> Gerar Ficha Técnica
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Cadastro de Cliente -->
     <div class="modal-overlay" id="clienteModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="clienteModalTitle">Cadastrar Novo Cliente</h3>
+                <h3 id="clienteModalTitle">Novo Cliente</h3>
                 <button class="close-modal" onclick="closeClienteModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="warning-message">
-                    <i class="fas fa-info-circle"></i> <strong>Atenção:</strong> Só é possível relacionar clientes a lotes disponíveis. Lotes vendidos não aparecerão na lista.
+                <div class="warning-message" style="background:#fff3cd; padding:10px; border-radius:6px; margin-bottom:15px; font-size:0.85rem; color:#856404;">
+                    <i class="fas fa-info-circle"></i> Ao salvar um cliente vinculado a um lote, o lote será automaticamente marcado como <strong>VENDIDO</strong>.
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Nome Completo *</label>
-                    <input type="text" id="clienteNome" class="form-control" placeholder="Nome do cliente">
+                    <input type="text" id="clienteNome" class="form-control">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Telefone</label>
-                    <input type="text" id="clienteTelefone" class="form-control" placeholder="(00) 00000-0000">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" id="clienteEmail" class="form-control" placeholder="email@exemplo.com">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Lote de Interesse *</label>
-                    <select id="clienteLote" class="form-control">
-                        <option value="">Selecione um lote disponível</option>
-                    </select>
-                    <div id="loteInfo" style="margin-top: 5px; font-size: 0.75rem; color: #666; display: none;">
-                        <span id="loteDetails"></span>
+                <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div>
+                        <label class="form-label">Telefone</label>
+                        <input type="text" id="clienteTelefone" class="form-control">
                     </div>
+                    <div>
+                        <label class="form-label">Email</label>
+                        <input type="email" id="clienteEmail" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Imobiliária Parceira</label>
+                    <select id="clienteImobiliaria" class="form-control">
+                        <option value="">Venda Direta (Sem Imobiliária)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Corretor</label>
+                    <input type="text" id="clienteCorretor" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Lote de Interesse (Apenas Disponíveis) *</label>
+                    <select id="clienteLote" class="form-control">
+                        <option value="">Selecione...</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Observações</label>
-                    <textarea id="clienteObservacoes" class="form-control" placeholder="Observações sobre o cliente ou interesse..."></textarea>
+                    <textarea id="clienteObservacoes" class="form-control"></textarea>
                 </div>
                 <div style="margin-top: 20px; display: flex; gap: 10px;">
-                    <button id="salvarCliente" class="btn-success">
-                        <i class="fas fa-save"></i> Salvar Cliente
-                    </button>
-                    <button class="btn-outline" onclick="closeClienteModal()">
-                        <i class="fas fa-times"></i> Cancelar
-                    </button>
+                    <button id="salvarCliente" class="btn-success"><i class="fas fa-check"></i> Confirmar Venda</button>
+                    <button class="btn-outline" onclick="closeClienteModal()">Cancelar</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Ficha para Impressão/PDF (oculta) -->
-    <div class="print-ficha" id="printFicha">
-        <div class="ficha-header">
-            <h1 class="ficha-title">RESERVA DA FOZ</h1>
-            <div class="ficha-subtitle">Ficha Técnica do Lote</div>
-        </div>
-
-        <div class="ficha-content">
-            <div class="ficha-section">
-                <h3><i class="fas fa-map-marker-alt"></i> Identificação</h3>
-                <div class="ficha-info">
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Quadra / Lote:</span>
-                        <span class="ficha-value" id="fichaQuadraLote">-</span>
+    <div class="modal-overlay" id="imobiliariaModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="imobiliariaModalTitle">Nova Imobiliária</h3>
+                <button class="close-modal" onclick="closeImobiliariaModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Nome Fantasia *</label>
+                    <input type="text" id="imobiliariaNome" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Responsável / Gerente</label>
+                    <input type="text" id="imobiliariaResponsavel" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Comissão (%)</label>
+                    <input type="number" id="imobiliariaComissao" class="form-control" placeholder="Ex: 5" step="0.1">
+                </div>
+                <div class="form-group" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div>
+                        <label class="form-label">Telefone</label>
+                        <input type="text" id="imobiliariaTelefone" class="form-control">
                     </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Item Tabela:</span>
-                        <span class="ficha-value" id="fichaItem">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Área Total:</span>
-                        <span class="ficha-value" id="fichaArea">- m²</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Valor do m²:</span>
-                        <span class="ficha-value" id="fichaM2">-</span>
+                    <div>
+                        <label class="form-label">CNPJ</label>
+                        <input type="text" id="imobiliariaCnpj" class="form-control">
                     </div>
                 </div>
-            </div>
-
-            <div class="ficha-section">
-                <h3><i class="fas fa-info-circle"></i> Status</h3>
-                <div class="ficha-info">
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Situação:</span>
-                        <span class="ficha-value" id="fichaStatus">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Data da Ficha:</span>
-                        <span class="ficha-value" id="fichaData">-</span>
-                    </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="imobiliariaEmail" class="form-control">
                 </div>
-                <div id="fichaStatusBadge" class="ficha-status status-disponivel">DISPONÍVEL</div>
-            </div>
-
-            <div class="ficha-section" style="grid-column: 1 / -1;">
-                <h3><i class="fas fa-money-bill-wave"></i> Valores Principais</h3>
-                <div class="ficha-highlight">
-                    <div>Valor Total do Lote</div>
-                    <div class="ficha-total" id="fichaValorTotal">-</div>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button id="salvarImobiliaria" class="btn-success"><i class="fas fa-save"></i> Salvar</button>
+                    <button class="btn-outline" onclick="closeImobiliariaModal()">Cancelar</button>
                 </div>
             </div>
-
-            <div class="ficha-section">
-                <h3><i class="fas fa-handshake"></i> Condições de Pagamento</h3>
-                <div class="ficha-info">
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Sinal:</span>
-                        <span class="ficha-value" id="fichaSinal">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Sinal à Vista:</span>
-                        <span class="ficha-value" id="fichaSinalVista">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Reserva:</span>
-                        <span class="ficha-value" id="fichaReserva">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Saldo à Vista:</span>
-                        <span class="ficha-value" id="fichaSaldoVista">-</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ficha-section">
-                <h3><i class="fas fa-calendar-alt"></i> Parcelamento</h3>
-                <div class="ficha-info">
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Saldo em 2x:</span>
-                        <span class="ficha-value" id="fichaSaldo2x">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Saldo em 3x:</span>
-                        <span class="ficha-value" id="fichaSaldo3x">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Saldo 60 meses:</span>
-                        <span class="ficha-value" id="fichaSaldo60">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">120 Meses:</span>
-                        <span class="ficha-value" id="ficha120">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">156 Meses:</span>
-                        <span class="ficha-value" id="ficha156">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">160 Meses:</span>
-                        <span class="ficha-value" id="ficha160">-</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="ficha-footer">
-            <p>RESERVA DA FOZ - Sistema de Gestão de Lotes | Gerado em <span id="fichaGeradoEm">-</span></p>
-            <p>www.reservadafoz.com.br | contato@reservadafoz.com.br</p>
         </div>
     </div>
 
-    <!-- Ficha do Cliente para Impressão/PDF (oculta) -->
-    <div class="print-ficha" id="printFichaCliente">
-        <div class="ficha-header">
-            <h1 class="ficha-title">RESERVA DA FOZ</h1>
-            <div class="ficha-subtitle">Ficha do Cliente</div>
+    <div id="printFicha" class="print-ficha">
+        <div class="ficha-print-header">
+            <h1 class="ficha-print-title">Reserva da Foz</h1>
+            <p>Ficha Técnica do Lote</p>
+        </div>
+        
+        <div class="ficha-print-highlight">
+            <h2 style="margin:0; color:#1b4d3e; font-size:28px;" id="fichaQuadraLote">Quadra X - Lote Y</h2>
+            <p id="fichaStatusBadge" style="margin-top:5px; font-weight:bold;">DISPONÍVEL</p>
         </div>
 
-        <div class="ficha-content">
-            <div class="ficha-section" style="grid-column: 1 / -1;">
-                <h3><i class="fas fa-user"></i> Dados do Cliente</h3>
-                <div class="ficha-info">
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Nome:</span>
-                        <span class="ficha-value" id="fichaClienteNome">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Telefone:</span>
-                        <span class="ficha-value" id="fichaClienteTelefone">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Email:</span>
-                        <span class="ficha-value" id="fichaClienteEmail">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Data de Cadastro:</span>
-                        <span class="ficha-value" id="fichaClienteData">-</span>
-                    </div>
-                </div>
+        <div class="ficha-print-grid">
+            <div class="ficha-print-item">
+                <span class="ficha-print-label">Área Total</span>
+                <span class="ficha-print-value" id="fichaArea">- m²</span>
             </div>
-
-            <div class="ficha-section" style="grid-column: 1 / -1;">
-                <h3><i class="fas fa-home"></i> Lote de Interesse</h3>
-                <div class="ficha-info">
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Quadra / Lote:</span>
-                        <span class="ficha-value" id="fichaClienteLote">-</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Área Total:</span>
-                        <span class="ficha-value" id="fichaClienteArea">- m²</span>
-                    </div>
-                    <div class="ficha-info-item">
-                        <span class="ficha-label">Valor Total:</span>
-                        <span class="ficha-value" id="fichaClienteValor">-</span>
-                    </div>
-                </div>
+            <div class="ficha-print-item">
+                <span class="ficha-print-label">Valor Total</span>
+                <span class="ficha-print-value" id="fichaValorTotal">-</span>
             </div>
-
-            <div class="ficha-section" style="grid-column: 1 / -1;">
-                <h3><i class="fas fa-sticky-note"></i> Observações</h3>
-                <div style="padding: 10px; background: #f8f9fa; border-radius: 6px; min-height: 80px;">
-                    <p id="fichaClienteObservacoes">-</p>
-                </div>
+            <div class="ficha-print-item">
+                <span class="ficha-print-label">Sinal</span>
+                <span class="ficha-print-value" id="fichaSinal">-</span>
+            </div>
+            <div class="ficha-print-item">
+                <span class="ficha-print-label">Saldo em 60x</span>
+                <span class="ficha-print-value" id="fichaSaldo60">-</span>
+            </div>
+            <div class="ficha-print-item">
+                <span class="ficha-print-label">Saldo em 120x</span>
+                <span class="ficha-print-value" id="ficha120">-</span>
+            </div>
+             <div class="ficha-print-item">
+                <span class="ficha-print-label">Valor m²</span>
+                <span class="ficha-print-value" id="fichaM2">-</span>
             </div>
         </div>
 
-        <div class="ficha-footer">
-            <p>RESERVA DA FOZ - Sistema de Gestão de Clientes | Gerado em <span id="fichaClienteGeradoEm">-</span></p>
-            <p>www.reservadafoz.com.br | contato@reservadafoz.com.br</p>
+        <div class="ficha-print-footer">
+            <p>Documento gerado em <span id="fichaGeradoEm"></span>. Valores sujeitos a alteração sem aviso prévio.</p>
+        </div>
+    </div>
+
+    <div id="printFichaCliente" class="print-ficha">
+        <div class="ficha-print-header">
+            <h1 class="ficha-print-title">Reserva da Foz</h1>
+            <p>Ficha de Reserva / Venda</p>
+        </div>
+        
+        <h3 style="border-bottom: 2px solid #1b4d3e; padding-bottom:5px; margin-bottom:15px;">Dados do Cliente</h3>
+        <div class="ficha-print-grid">
+            <div class="ficha-print-item">
+                <span class="ficha-print-label">Nome</span>
+                <span class="ficha-print-value" id="fichaClienteNome">-</span>
+            </div>
+            <div class="ficha-print-item">
+                <span class="ficha-print-label">Telefone</span>
+                <span class="ficha-print-value" id="fichaClienteTelefone">-</span>
+            </div>
+            <div class="ficha-print-item">
+                <span class="ficha-print-label">Email</span>
+                <span class="ficha-print-value" id="fichaClienteEmail">-</span>
+            </div>
+            <div class="ficha-print-item">
+                <span class="ficha-print-label">Data Cadastro</span>
+                <span class="ficha-print-value" id="fichaClienteData">-</span>
+            </div>
+        </div>
+
+        <h3 style="border-bottom: 2px solid #1b4d3e; padding-bottom:5px; margin-bottom:15px;">Dados do Imóvel</h3>
+        <div class="ficha-print-grid">
+            <div class="ficha-print-item">
+                <span class="ficha-print-label">Lote</span>
+                <span class="ficha-print-value" id="fichaClienteLote">-</span>
+            </div>
+            <div class="ficha-print-item">
+                <span class="ficha-print-label">Valor Negociado</span>
+                <span class="ficha-print-value" id="fichaClienteValor">-</span>
+            </div>
+        </div>
+
+        <div style="margin-top:20px; background:#eee; padding:15px; border-radius:6px;">
+            <span class="ficha-print-label">Observações</span>
+            <p id="fichaClienteObservacoes" style="font-size:12px; margin-top:5px;">-</p>
+        </div>
+
+        <div class="ficha-print-footer">
+            <p>Documento interno. Gerado em <span id="fichaClienteGeradoEm"></span>.</p>
         </div>
     </div>
 
     <script>
-        // Desenvolvedor Alex Peixoto. Todos os Direitos Reservados
-        
         document.addEventListener('DOMContentLoaded', () => {
-            // Estado
+            // ================= STATE =================
             let database = [];
             let clientes = [];
+            let imobiliarias = [];
             let charts = {};
             let currentLote = null;
             let currentCliente = null;
-            let simplifiedMode = localStorage.getItem('simplifiedMode') === 'true';
             let editingClienteId = null;
+            let editingImobiliariaId = null;
+            let simplifiedMode = localStorage.getItem('simplifiedMode') === 'true';
 
-            // Inicializar Modo Simplificado
+            // ================= INIT FUNCTIONS =================
+            function init() {
+                initTabs();
+                initCharts();
+                initSimplifiedMode();
+                
+                // Load Data
+                const dbSaved = localStorage.getItem('reservaFoz_db_final');
+                const cliSaved = localStorage.getItem('reservaFoz_clientes_final');
+                const imoSaved = localStorage.getItem('reservaFoz_imos_final');
+
+                if (dbSaved) database = JSON.parse(dbSaved);
+                if (cliSaved) clientes = JSON.parse(cliSaved);
+                if (imoSaved) imobiliarias = JSON.parse(imoSaved);
+
+                // Initial Render
+                saveAndRender();
+                renderClientes();
+                renderImobiliarias();
+                updateImobiliariaSelect(); // Populando o dropdown na carga inicial
+                atualizarRankings();
+            }
+
+            function initTabs() {
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                        
+                        tab.classList.add('active');
+                        document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+                        
+                        if (tab.dataset.tab === 'relatorios') atualizarRankings();
+                    });
+                });
+            }
+
             function initSimplifiedMode() {
                 const toggle = document.getElementById('simplifiedModeToggle');
                 const mainGrid = document.getElementById('mainGrid');
@@ -1100,18 +696,7 @@
                 
                 toggle.checked = simplifiedMode;
                 
-                if (simplifiedMode) {
-                    mainGrid.classList.add('simplified');
-                    configCards.forEach(card => card.classList.add('hidden'));
-                } else {
-                    mainGrid.classList.remove('simplified');
-                    configCards.forEach(card => card.classList.remove('hidden'));
-                }
-                
-                toggle.addEventListener('change', function() {
-                    simplifiedMode = this.checked;
-                    localStorage.setItem('simplifiedMode', simplifiedMode);
-                    
+                function applyMode() {
                     if (simplifiedMode) {
                         mainGrid.classList.add('simplified');
                         configCards.forEach(card => card.classList.add('hidden'));
@@ -1119,12 +704,17 @@
                         mainGrid.classList.remove('simplified');
                         configCards.forEach(card => card.classList.remove('hidden'));
                     }
+                }
+                applyMode();
+
+                toggle.addEventListener('change', (e) => {
+                    simplifiedMode = e.target.checked;
+                    localStorage.setItem('simplifiedMode', simplifiedMode);
+                    applyMode();
                 });
             }
 
-            // Inicializar Gráficos
             function initCharts() {
-                // 1. Quantidade Geral
                 const ctxQty = document.getElementById('quantityChart').getContext('2d');
                 charts.qty = new Chart(ctxQty, {
                     type: 'doughnut',
@@ -1132,737 +722,58 @@
                         labels: ['Disponíveis', 'Vendidos'],
                         datasets: [{ data: [0,0], backgroundColor: ['#40916c', '#bc4749'], borderWidth: 0 }]
                     },
-                    options: { 
-                        responsive: true, 
-                        maintainAspectRatio: false, 
-                        cutout: '60%', 
-                        plugins: { legend: { display: false } } 
-                    }
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { display: false } } }
                 });
 
-                // 2. Lotes por Quadra
                 const ctxQuadra = document.getElementById('quadraChart').getContext('2d');
                 charts.quadra = new Chart(ctxQuadra, {
                     type: 'bar',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: 'Disponíveis',
-                            data: [],
-                            backgroundColor: '#2d6a4f',
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true, 
-                        maintainAspectRatio: false,
-                        plugins: { 
-                            legend: { display: false },
-                            tooltip: { callbacks: { label: (context) => `Disponíveis: ${context.raw}` } }
-                        },
-                        scales: { 
-                            y: { beginAtZero: true, ticks: { stepSize: 1 } }, 
-                            x: { grid: { display: false } } 
-                        }
-                    }
-                });
-
-                // 3. Financeiro (VGV)
-                const ctxFin = document.getElementById('financialChart').getContext('2d');
-                charts.fin = new Chart(ctxFin, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Disp.', 'Vend.'],
-                        datasets: [{
-                            label: 'Valor (R$)',
-                            data: [0, 0],
-                            backgroundColor: ['#40916c', '#bc4749'],
-                            borderRadius: 5
-                        }]
-                    },
-                    options: {
-                        responsive: true, 
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: { 
-                            y: { 
-                                beginAtZero: true, 
-                                ticks: { 
-                                    callback: v => 'R$ ' + (v/1000000).toFixed(1) + 'M' 
-                                } 
-                            } 
-                        }
-                    }
+                    data: { labels: [], datasets: [{ label: 'Disp', data: [], backgroundColor: '#2d6a4f', borderRadius: 4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
                 });
             }
 
-            // Sistema de Abas
-            function initTabs() {
-                const tabs = document.querySelectorAll('.tab');
-                const tabContents = document.querySelectorAll('.tab-content');
-                
-                tabs.forEach(tab => {
-                    tab.addEventListener('click', () => {
-                        const tabId = tab.getAttribute('data-tab');
-                        
-                        // Ativar aba clicada
-                        tabs.forEach(t => t.classList.remove('active'));
-                        tab.classList.add('active');
-                        
-                        // Mostrar conteúdo correspondente
-                        tabContents.forEach(content => {
-                            content.classList.remove('active');
-                            if (content.id === `${tabId}-tab`) {
-                                content.classList.add('active');
-                            }
-                        });
-                        
-                        // Mostrar painel de clientes se for a aba de clientes
-                        if (tabId === 'clientes') {
-                            document.getElementById('clientesPanel').style.display = 'block';
-                        }
-                    });
-                });
-            }
-
-            // Processamento PDF
-            document.getElementById('importPdfButton').addEventListener('click', async () => {
-                const file = document.getElementById('pdfFileInput').files[0];
-                if (!file) return alert('Selecione o PDF.');
-                
-                document.getElementById('loadingIndicator').style.display = 'block';
-                
-                try {
-                    const buffer = await file.arrayBuffer();
-                    const pdf = await pdfjsLib.getDocument(buffer).promise;
-                    let fullText = '';
-                    
-                    // Processar cada página para extrair texto
-                    for (let i = 1; i <= pdf.numPages; i++) {
-                        const page = await pdf.getPage(i);
-                        const content = await page.getTextContent();
-                        
-                        // Extrair texto
-                        fullText += content.items.map(item => item.str).join(' ') + '\n';
-                    }
-                    
-                    // Processar dados extraídos
-                    const parsedData = parseAndLoad(fullText);
-                    const existingSoldItems = getExistingSoldItems();
-                    const colorDetectedData = applyColorDetection(parsedData, existingSoldItems);
-                    
-                    database = colorDetectedData;
-                    saveAndRender();
-                    updateLoteSelect();
-                    
-                    alert(`${database.length} lotes carregados!`);
-                } catch (e) {
-                    alert('Erro ao ler PDF: ' + e.message);
-                } finally {
-                    document.getElementById('loadingIndicator').style.display = 'none';
-                }
-            });
-
-            // Obter itens já marcados como vendidos no sistema
-            function getExistingSoldItems() {
-                return database.filter(item => item.status === 'vendido').map(item => item.item);
-            }
-
-            // Aplicar detecção de cores aos dados
-            function applyColorDetection(parsedData, existingSoldItems) {
-                // Primeiro, preservar o status dos lotes já marcados como vendidos
-                const result = parsedData.map(item => {
-                    // Se o item já estava marcado como vendido, manter esse status
-                    if (existingSoldItems.includes(item.item)) {
-                        item.status = 'vendido';
-                    }
-                    return item;
-                });
-
-                // Agora aplicar detecção baseada em texto para novos lotes
-                return result.map(item => {
-                    // Se o item não estava marcado como vendido anteriormente, aplicar detecção
-                    if (item.status !== 'vendido') {
-                        // Detectar por texto "VENDIDO" próximo ao item
-                        const textAround = JSON.stringify(item).toUpperCase();
-                        if (textAround.includes('VENDIDO') || textAround.includes('INDISPONIVEL') || 
-                            textAround.includes('VEND') || textAround.includes('INDISP')) {
-                            item.status = 'vendido';
-                        }
-                        
-                        // Detectar por padrões específicos de formatação
-                        // Muitos PDFs usam padrões como "R$ 0,00" ou valores zerados para lotes vendidos
-                        if (item.total === '0,00' || item.total === '0' || 
-                            item.sinal === '0,00' || item.sinal === '0') {
-                            item.status = 'vendido';
-                        }
-                    }
-                    
-                    return item;
-                });
-            }
-
-            function parseAndLoad(text) {
-                const newData = [];
-                // Limpar e normalizar o texto
-                let cleanText = text.replace(/R\$\s*/gi, '').replace(/\t/g, ' ').replace(/\r/g, ' ').replace(/\n/g, ' ').replace(/\s+/g, ' ');
-
-                // Regex para capturar todos os campos na ordem correta:
-                // ITEM, QD, LT, Tam m2, Total, Sinal a vista, Reserva, saldo a vista, saldo em 2 x, saldo em 3 x, Saldo 60 meses, 120 meses ,156 meses, 160 meses
-                const regex = /(\d+)\s+([A-Z])\s+(\d+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)/g;
-                let match;
-
-                while ((match = regex.exec(cleanText)) !== null) {
-                    // Status padrão é disponível - a detecção de cores vai ajustar depois
-                    let status = 'disponivel';
-
-                    newData.push({
-                        item: match[1], 
-                        qd: match[2], 
-                        lt: match[3], 
-                        tam: match[4], 
-                        m2: match[5],
-                        total: match[6] || '-', 
-                        sinal: match[7] || '-', 
-                        sinalVista: match[8] || '-',
-                        reserva: match[9] || '-', 
-                        saldoVista: match[10] || '-', 
-                        saldo2x: match[11] || '-',
-                        saldo3x: match[12] || '-', 
-                        saldo60: match[13] || '-', 
-                        p120: match[14] || '-',
-                        p156: match[15] || '-', 
-                        p160: match[16] || '-',
-                        status: status
-                    });
-                }
-
-                // Se a regex anterior não funcionar, tentar uma abordagem mais flexível
-                if (newData.length === 0) {
-                    console.log("Tentando abordagem alternativa...");
-                    const altRegex = /(\d+)\s+([A-Z])\s+(\d+)\s+([\d.,]+)\s+([\d.,]+)/g;
-                    let altMatch;
-                    
-                    while ((altMatch = altRegex.exec(cleanText)) !== null) {
-                        const lookAhead = cleanText.substring(altRegex.lastIndex, altRegex.lastIndex + 1500);
-                        const moneys = lookAhead.match(/([\d.,]+)/g) || [];
-                        
-                        let status = 'disponivel';
-
-                        if (moneys.length >= 14) {
-                            newData.push({
-                                item: altMatch[1], 
-                                qd: altMatch[2], 
-                                lt: altMatch[3], 
-                                tam: altMatch[4], 
-                                m2: altMatch[5],
-                                total: moneys[0] || '-', 
-                                sinal: moneys[1] || '-', 
-                                sinalVista: moneys[2] || '-',
-                                reserva: moneys[3] || '-', 
-                                saldoVista: moneys[4] || '-', 
-                                saldo2x: moneys[5] || '-',
-                                saldo3x: moneys[6] || '-', 
-                                saldo60: moneys[7] || '-', 
-                                p120: moneys[8] || '-',
-                                p156: moneys[9] || '-', 
-                                p160: moneys[10] || '-',
-                                status: status
-                            });
-                        }
-                    }
-                }
-
-                if (newData.length === 0) {
-                    alert('Erro ao identificar tabela. Verifique se o PDF contém a tabela com os campos solicitados.');
-                }
-                
-                return newData;
-            }
-
-            // Sistema de Backup
-            document.getElementById('backupButton').addEventListener('click', () => {
-                if (database.length === 0) {
-                    alert('Não há dados para fazer backup.');
-                    return;
-                }
-                
-                const backupData = {
-                    database: database,
-                    clientes: clientes,
-                    timestamp: new Date().toISOString(),
-                    version: '6.0',
-                    developer: 'Alex Peixoto - Todos os Direitos Reservados'
-                };
-                
-                const dataStr = JSON.stringify(backupData, null, 2);
-                const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `backup_reserva_foz_${new Date().toISOString().split('T')[0]}.json`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-                
-                alert('Backup realizado com sucesso!');
-            });
-
-            document.getElementById('restoreButton').addEventListener('click', () => {
-                document.getElementById('restoreFileInput').click();
-            });
-
-            document.getElementById('restoreFileInput').addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const backupData = JSON.parse(e.target.result);
-                        
-                        if (backupData.database && Array.isArray(backupData.database)) {
-                            if (confirm(`Deseja restaurar backup com ${backupData.database.length} lotes?`)) {
-                                database = backupData.database;
-                                clientes = backupData.clientes || [];
-                                saveAndRender();
-                                renderClientes();
-                                updateLoteSelect();
-                                alert('Backup restaurado com sucesso!');
-                            }
-                        } else {
-                            alert('Arquivo de backup inválido.');
-                        }
-                    } catch (error) {
-                        alert('Erro ao ler arquivo de backup: ' + error.message);
-                    }
-                };
-                reader.readAsText(file);
-                event.target.value = ''; // Reset input
-            });
-
-            // Ação de mudar status (Manual + Bulk)
-            window.toggleStatus = function(item) {
-                const idx = database.findIndex(l => l.item === item);
-                if (idx >= 0) {
-                    database[idx].status = database[idx].status === 'vendido' ? 'disponivel' : 'vendido';
-                    saveAndRender();
-                    updateLoteSelect(); // Atualizar lista de lotes disponíveis
-                    
-                    // Verificar se algum cliente está relacionado a este lote
-                    if (database[idx].status === 'vendido') {
-                        const clientesComEsteLote = clientes.filter(c => c.loteId === item);
-                        if (clientesComEsteLote.length > 0) {
-                            alert(`Atenção: ${clientesComEsteLote.length} cliente(s) está(ão) relacionado(s) a este lote que foi marcado como vendido.`);
-                        }
-                    }
-                }
-            };
-
-            document.getElementById('markSoldButton').addEventListener('click', () => {
-                const ids = document.getElementById('soldItemsInput').value.split(/[\s,]+/).map(s => s.trim());
-                let count = 0;
-                database.forEach(l => {
-                    if (ids.includes(l.item)) { 
-                        l.status = 'vendido'; 
-                        count++; 
-                    }
-                });
-                if (count > 0) {
-                    saveAndRender();
-                    updateLoteSelect(); // Atualizar lista de lotes disponíveis
-                    document.getElementById('soldItemsInput').value = '';
-                    alert(`${count} marcados como VENDIDO.`);
-                }
-            });
-
-            // Cadastro de Clientes
-            document.getElementById('salvarCliente').addEventListener('click', () => {
-                const nome = document.getElementById('clienteNome').value.trim();
-                const telefone = document.getElementById('clienteTelefone').value.trim();
-                const email = document.getElementById('clienteEmail').value.trim();
-                const loteId = document.getElementById('clienteLote').value;
-                const observacoes = document.getElementById('clienteObservacoes').value.trim();
-                
-                if (!nome) {
-                    alert('Por favor, preencha o nome do cliente.');
-                    return;
-                }
-                
-                if (!loteId) {
-                    alert('Por favor, selecione um lote de interesse.');
-                    return;
-                }
-                
-                const lote = database.find(l => l.item === loteId);
-                if (!lote) {
-                    alert('Lote selecionado não encontrado.');
-                    return;
-                }
-                
-                // VALIDAÇÃO: Verificar se o lote está disponível
-                if (lote.status !== 'disponivel') {
-                    alert('Erro: O lote selecionado não está disponível para venda. Por favor, selecione um lote disponível.');
-                    return;
-                }
-                
-                if (editingClienteId) {
-                    // Editar cliente existente
-                    const clienteIndex = clientes.findIndex(c => c.id === editingClienteId);
-                    if (clienteIndex !== -1) {
-                        clientes[clienteIndex] = {
-                            ...clientes[clienteIndex],
-                            nome: nome,
-                            telefone: telefone,
-                            email: email,
-                            loteId: loteId,
-                            loteInfo: `${lote.qd} / ${lote.lt}`,
-                            observacoes: observacoes
-                        };
-                    }
-                    editingClienteId = null;
-                } else {
-                    // Criar novo cliente
-                    const novoCliente = {
-                        id: Date.now().toString(),
-                        nome: nome,
-                        telefone: telefone,
-                        email: email,
-                        loteId: loteId,
-                        loteInfo: `${lote.qd} / ${lote.lt}`,
-                        observacoes: observacoes,
-                        dataCadastro: new Date().toISOString()
-                    };
-                    
-                    clientes.push(novoCliente);
-                }
-                
-                saveClientes();
-                renderClientes();
-                closeClienteModal();
-                
-                alert(editingClienteId ? 'Cliente atualizado com sucesso!' : 'Cliente cadastrado com sucesso!');
-            });
-
-            // Atualizar select de lotes - MOSTRAR APENAS LOTES DISPONÍVEIS
-            function updateLoteSelect() {
-                const select = document.getElementById('clienteLote');
-                const filterSelect = document.getElementById('filterClienteLote');
-                
-                select.innerHTML = '<option value="">Selecione um lote disponível</option>';
-                filterSelect.innerHTML = '<option value="todos">Todos os lotes</option>';
-                
-                // Filtrar apenas lotes disponíveis
-                const lotesDisponiveis = database.filter(l => l.status === 'disponivel');
-                
-                if (lotesDisponiveis.length === 0) {
-                    const option = document.createElement('option');
-                    option.value = "";
-                    option.textContent = "Nenhum lote disponível";
-                    option.disabled = true;
-                    select.appendChild(option);
-                } else {
-                    lotesDisponiveis.forEach(lote => {
-                        const option = document.createElement('option');
-                        option.value = lote.item;
-                        option.textContent = `Qd ${lote.qd} - Lt ${lote.lt} (${lote.tam}m² - ${lote.total})`;
-                        option.setAttribute('data-lote-info', JSON.stringify(lote));
-                        select.appendChild(option);
-                        
-                        const filterOption = document.createElement('option');
-                        filterOption.value = lote.item;
-                        filterOption.textContent = `Qd ${lote.qd} - Lt ${lote.lt}`;
-                        filterSelect.appendChild(filterOption);
-                    });
-                }
-                
-                // Adicionar evento para mostrar detalhes do lote selecionado
-                select.addEventListener('change', function() {
-                    const selectedOption = this.options[this.selectedIndex];
-                    const loteInfoDiv = document.getElementById('loteInfo');
-                    const loteDetailsSpan = document.getElementById('loteDetails');
-                    
-                    if (this.value && selectedOption.getAttribute('data-lote-info')) {
-                        const lote = JSON.parse(selectedOption.getAttribute('data-lote-info'));
-                        loteDetailsSpan.innerHTML = `
-                            <strong>Detalhes do Lote:</strong> ${lote.tam}m² | Valor m²: ${lote.m2} | Total: ${lote.total}
-                        `;
-                        loteInfoDiv.style.display = 'block';
-                    } else {
-                        loteInfoDiv.style.display = 'none';
-                    }
-                });
-            }
-
-            // Renderizar clientes
-            function renderClientes() {
-                const container = document.getElementById('clientesContainer');
-                const searchTerm = document.getElementById('searchCliente').value.toLowerCase();
-                const filterLote = document.getElementById('filterClienteLote').value;
-                
-                let filteredClientes = clientes;
-                
-                // Aplicar filtros
-                if (searchTerm) {
-                    filteredClientes = filteredClientes.filter(cliente => 
-                        cliente.nome.toLowerCase().includes(searchTerm) ||
-                        cliente.telefone.includes(searchTerm) ||
-                        cliente.email.toLowerCase().includes(searchTerm)
-                    );
-                }
-                
-                if (filterLote && filterLote !== 'todos') {
-                    filteredClientes = filteredClientes.filter(cliente => cliente.loteId === filterLote);
-                }
-                
-                container.innerHTML = '';
-                
-                if (filteredClientes.length === 0) {
-                    container.innerHTML = `
-                        <div style="grid-column:1/-1; text-align:center; padding:20px; color:#aaa;">
-                            <i class="fas fa-user-plus" style="font-size:2rem; margin-bottom:8px;"></i>
-                            <p>Nenhum cliente encontrado.</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                filteredClientes.forEach(cliente => {
-                    const div = document.createElement('div');
-                    div.className = 'cliente-card';
-                    
-                    // Verificar se o lote ainda está disponível
-                    const lote = database.find(l => l.item === cliente.loteId);
-                    const loteDisponivel = lote && lote.status === 'disponivel';
-                    
-                    div.innerHTML = `
-                        <div class="cliente-header">
-                            <div class="cliente-nome">${cliente.nome}</div>
-                            ${!loteDisponivel ? '<span style="color: var(--danger-color); font-size: 0.7rem;"><i class="fas fa-exclamation-triangle"></i> Lote Vendido</span>' : ''}
-                        </div>
-                        <div class="cliente-contato">
-                            <div><i class="fas fa-phone"></i> ${cliente.telefone || 'Não informado'}</div>
-                            <div><i class="fas fa-envelope"></i> ${cliente.email || 'Não informado'}</div>
-                        </div>
-                        <div class="cliente-lote" style="${!loteDisponivel ? 'background: #ffebee; color: #c62828;' : ''}">
-                            <i class="fas fa-home"></i> Lote: ${cliente.loteInfo}
-                            ${lote ? ` (${lote.tam}m² - ${lote.total})` : ''}
-                        </div>
-                        ${cliente.observacoes ? `
-                            <div class="cliente-obs">
-                                <strong>Observações:</strong> ${cliente.observacoes}
-                            </div>
-                        ` : ''}
-                        <div class="cliente-actions">
-                            <button class="btn-sm btn-primary" onclick="gerarFichaCliente('${cliente.id}')">
-                                <i class="fas fa-download"></i> Ficha PDF
-                            </button>
-                            <button class="btn-sm btn-outline" onclick="editarCliente('${cliente.id}')" ${!loteDisponivel ? 'disabled style="opacity: 0.5;"' : ''}>
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button class="btn-sm btn-danger" onclick="excluirCliente('${cliente.id}')">
-                                <i class="fas fa-trash"></i> Excluir
-                            </button>
-                        </div>
-                    `;
-                    
-                    container.appendChild(div);
-                });
-            }
-
-            // Funções globais para ações de clientes
-            window.gerarFichaCliente = function(clienteId) {
-                const cliente = clientes.find(c => c.id === clienteId);
-                if (!cliente) return;
-                
-                const lote = database.find(l => l.item === cliente.loteId);
-                if (!lote) {
-                    alert('Lote relacionado não encontrado.');
-                    return;
-                }
-                
-                currentCliente = cliente;
-                prepareFichaCliente(cliente, lote);
-                downloadFichaCliente();
-            };
-
-            window.editarCliente = function(clienteId) {
-                const cliente = clientes.find(c => c.id === clienteId);
-                if (!cliente) return;
-                
-                // Verificar se o lote ainda está disponível
-                const lote = database.find(l => l.item === cliente.loteId);
-                if (lote && lote.status !== 'disponivel') {
-                    if (!confirm('Atenção: O lote relacionado a este cliente não está mais disponível. Deseja continuar com a edição?')) {
-                        return;
-                    }
-                }
-                
-                document.getElementById('clienteNome').value = cliente.nome;
-                document.getElementById('clienteTelefone').value = cliente.telefone;
-                document.getElementById('clienteEmail').value = cliente.email;
-                document.getElementById('clienteLote').value = cliente.loteId;
-                document.getElementById('clienteObservacoes').value = cliente.observacoes;
-                
-                editingClienteId = clienteId;
-                document.getElementById('clienteModalTitle').textContent = 'Editar Cliente';
-                openClienteModal();
-            };
-
-            window.excluirCliente = function(clienteId) {
-                if (confirm('Tem certeza que deseja excluir este cliente?')) {
-                    clientes = clientes.filter(c => c.id !== clienteId);
-                    saveClientes();
-                    renderClientes();
-                    alert('Cliente excluído com sucesso.');
-                }
-            };
-
-            // Abrir modal de cliente
-            window.openClienteModal = function() {
-                document.getElementById('clienteModal').style.display = 'flex';
-                updateLoteSelect(); // Atualizar lista sempre que abrir o modal
-            };
-
-            // Fechar modal de cliente
-            window.closeClienteModal = function() {
-                document.getElementById('clienteModal').style.display = 'none';
-                document.getElementById('clienteModalTitle').textContent = 'Cadastrar Novo Cliente';
-                document.getElementById('clienteNome').value = '';
-                document.getElementById('clienteTelefone').value = '';
-                document.getElementById('clienteEmail').value = '';
-                document.getElementById('clienteLote').value = '';
-                document.getElementById('clienteObservacoes').value = '';
-                document.getElementById('loteInfo').style.display = 'none';
-                editingClienteId = null;
-            };
-
-            // Preparar ficha do cliente para impressão/PDF
-            function prepareFichaCliente(cliente, lote) {
-                document.getElementById('fichaClienteNome').textContent = cliente.nome;
-                document.getElementById('fichaClienteTelefone').textContent = cliente.telefone || 'Não informado';
-                document.getElementById('fichaClienteEmail').textContent = cliente.email || 'Não informado';
-                document.getElementById('fichaClienteData').textContent = new Date(cliente.dataCadastro).toLocaleDateString('pt-BR');
-                document.getElementById('fichaClienteLote').textContent = cliente.loteInfo;
-                document.getElementById('fichaClienteArea').textContent = lote.tam;
-                document.getElementById('fichaClienteValor').textContent = lote.total;
-                document.getElementById('fichaClienteObservacoes').textContent = cliente.observacoes || 'Nenhuma observação registrada.';
-                document.getElementById('fichaClienteGeradoEm').textContent = new Date().toLocaleDateString('pt-BR');
-            }
-
-            // Baixar ficha do cliente como PDF
-            async function downloadFichaCliente() {
-                if (!currentCliente) {
-                    alert('Nenhum cliente selecionado.');
-                    return;
-                }
-                
-                try {
-                    const { jsPDF } = window.jspdf;
-                    const doc = new jsPDF('p', 'mm', 'a4');
-                    
-                    // Capturar a ficha do cliente como imagem
-                    const fichaElement = document.getElementById('printFichaCliente');
-                    
-                    // Mostrar temporariamente a ficha para captura
-                    fichaElement.style.display = 'block';
-                    
-                    const canvas = await html2canvas(fichaElement, {
-                        scale: 2,
-                        useCORS: true,
-                        logging: false,
-                        backgroundColor: '#ffffff'
-                    });
-                    
-                    // Ocultar a ficha novamente
-                    fichaElement.style.display = 'none';
-                    
-                    const imgData = canvas.toDataURL('image/png');
-                    const imgWidth = 190; // Largura menor para margens
-                    const imgHeight = canvas.height * imgWidth / canvas.width;
-                    
-                    // Calcular posição para centralizar
-                    const xPosition = (210 - imgWidth) / 2; // 210mm é a largura do A4
-                    
-                    doc.addImage(imgData, 'PNG', xPosition, 10, imgWidth, imgHeight);
-                    
-                    doc.save(`Ficha_Cliente_${currentCliente.nome.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
-                    
-                } catch (error) {
-                    console.error('Erro ao gerar PDF:', error);
-                    alert('Erro ao gerar PDF. Verifique o console para mais detalhes.');
-                }
-            }
-
-            // Salvar clientes no localStorage
-            function saveClientes() {
-                localStorage.setItem('reservaFoz_clientes', JSON.stringify(clientes));
-            }
-
-            // Carregar clientes do localStorage
-            function loadClientes() {
-                const saved = localStorage.getItem('reservaFoz_clientes');
-                if (saved) {
-                    clientes = JSON.parse(saved);
-                    renderClientes();
-                }
-            }
-
-            // Renderização
+            // ================= CORE LOGIC =================
             function saveAndRender() {
-                localStorage.setItem('reservaFoz_db4', JSON.stringify(database));
-                updateStats();
-                filterLotes();
-                updateLoteSelect();
-            }
+                // Save
+                localStorage.setItem('reservaFoz_db_final', JSON.stringify(database));
+                
+                // Update Stats
+                const sold = database.filter(l => l.status === 'vendido').length;
+                const avail = database.length - sold;
+                
+                document.getElementById('totalCount').innerText = database.length;
+                document.getElementById('availCount').innerText = avail;
+                document.getElementById('soldCount').innerText = sold;
 
-            function updateStats() {
-                const total = database.length;
-                const sold = database.filter(l => l.status === 'vendido');
-                const avail = database.filter(l => l.status !== 'vendido');
-
-                // Texto
-                document.getElementById('totalCount').innerText = total;
-                document.getElementById('availCount').innerText = avail.length;
-                document.getElementById('soldCount').innerText = sold.length;
-
-                // 1. Chart Quantidade
-                charts.qty.data.datasets[0].data = [avail.length, sold.length];
+                // Update Charts
+                charts.qty.data.datasets[0].data = [avail, sold];
                 charts.qty.update();
 
-                // 2. Chart Quadras (Disponíveis)
                 const quadraCounts = {};
-                avail.forEach(l => {
+                database.filter(l => l.status === 'disponivel').forEach(l => {
                     quadraCounts[l.qd] = (quadraCounts[l.qd] || 0) + 1;
                 });
-                
                 const sortedQuadras = Object.keys(quadraCounts).sort();
                 charts.quadra.data.labels = sortedQuadras;
                 charts.quadra.data.datasets[0].data = sortedQuadras.map(q => quadraCounts[q]);
                 charts.quadra.update();
 
-                // 3. Chart Financeiro
-                const sumVal = (arr) => arr.reduce((acc, l) => {
-                    let v = parseFloat(l.total.replace(/\./g,'').replace(',','.'));
-                    return acc + (isNaN(v) ? 0 : v);
-                }, 0);
-                charts.fin.data.datasets[0].data = [sumVal(avail), sumVal(sold)];
-                charts.fin.update();
-                
-                // 4. Valor Médio Geral
-                const allValues = database.map(l => {
-                    return parseFloat(l.total.replace(/\./g,'').replace(',','.')) || 0;
-                });
-                const avgValue = allValues.reduce((acc, val) => acc + val, 0) / allValues.length;
-                
-                if (!isNaN(avgValue)) {
-                    document.getElementById('avgTotalValue').textContent = 
-                        'R$ ' + avgValue.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                } else {
-                    document.getElementById('avgTotalValue').textContent = 'R$ 0,00';
-                }
+                // Update Avg Price
+                const totals = database.map(l => parseMoney(l.total));
+                const avg = totals.length ? totals.reduce((a,b)=>a+b,0)/totals.length : 0;
+                document.getElementById('avgTotalValue').innerText = formatMoney(avg);
+
+                filterLotes();
+            }
+
+            function parseMoney(str) {
+                if (!str) return 0;
+                return parseFloat(str.replace(/\./g, '').replace(',', '.')) || 0;
+            }
+
+            function formatMoney(val) {
+                return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
 
             function filterLotes() {
@@ -1879,280 +790,595 @@
 
                 res.sort((a,b) => {
                     if (sort === 'quadra') return a.qd.localeCompare(b.qd) || parseInt(a.lt) - parseInt(b.lt);
-                    if (sort === 'valor') {
-                        const vA = parseFloat(a.total.replace(/\./g,'').replace(',','.')) || 0;
-                        const vB = parseFloat(b.total.replace(/\./g,'').replace(',','.')) || 0;
-                        return vA - vB;
-                    }
+                    if (sort === 'valor') return parseMoney(a.total) - parseMoney(b.total);
                 });
 
                 const container = document.getElementById('resultsContainer');
                 container.innerHTML = '';
                 
-                if (res.length === 0) container.innerHTML = '<p style="grid-column:1/-1; text-align:center; font-size:0.9rem;">Nenhum lote encontrado.</p>';
+                if (res.length === 0 && database.length > 0) container.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#666;">Nenhum lote encontrado no filtro.</p>';
 
                 res.forEach(l => {
                     const isSold = l.status === 'vendido';
                     const div = document.createElement('div');
                     div.className = `lot-card ${l.status}`;
-                    
-                    // O onclick no DIV abre o modal
                     div.onclick = () => openModal(l);
-
                     div.innerHTML = `
                         <div class="lot-card-header">
                             <strong>Qd ${l.qd} - Lt ${l.lt}</strong>
-                            <div style="text-align:right">
-                                <span class="status-badge" style="color:#333">${isSold ? 'VENDIDO' : 'DISPONÍVEL'}</span>
-                            </div>
+                            <span class="status-badge">${isSold ? 'VENDIDO' : 'DISPONÍVEL'}</span>
                         </div>
                         <div class="lot-body">
                             <div class="lot-info-row"><span>Área:</span> <b>${l.tam} m²</b></div>
                             <div class="lot-info-row"><span>Total:</span> <b>${l.total}</b></div>
-                            <div class="lot-info-row"><span>Sinal:</span> <b>${l.sinal}</b></div>
                         </div>
-                        <button class="btn-action-card" 
-                            onclick="event.stopPropagation(); toggleStatus('${l.item}')" 
-                            title="Mudar Status Rápido">
-                            ${isSold ? '<i class="fas fa-undo"></i> Disponível' : '<i class="fas fa-check"></i> Vendido'}
+                        <button class="btn-action-card" onclick="event.stopPropagation(); toggleStatus('${l.item}')">
+                            ${isSold ? '<i class="fas fa-undo"></i> Liberar' : '<i class="fas fa-check"></i> Vender Rápido'}
                         </button>
                     `;
                     container.appendChild(div);
                 });
             }
 
-            // Modal Logic
-            window.openModal = function(lote) {
-                currentLote = lote;
-                document.getElementById('modalTitle').innerText = `Detalhes: Quadra ${lote.qd} - Lote ${lote.lt}`;
-                const fields = [
-                    'mQuadraLote', 'mItem', 'mTam', 'mM2', 'mTotal', 
-                    'mSinal', 'mSinalVista', 'mReserva', 'mSaldoVista', 
-                    'mSaldo2x', 'mSaldo3x', 'mSaldo60', 'm120', 'm156', 'm160'
-                ];
-                const values = [
-                    `${lote.qd} / ${lote.lt}`, lote.item, lote.tam, lote.m2, lote.total,
-                    lote.sinal, lote.sinalVista, lote.reserva, lote.saldoVista,
-                    lote.saldo2x, lote.saldo3x, lote.saldo60, lote.p120, lote.p156, lote.p160
-                ];
-                fields.forEach((id, i) => document.getElementById(id).innerText = values[i] || '-');
-                document.getElementById('detailModal').style.display = 'flex';
-                
-                // Preparar ficha para impressão
-                prepareFicha(lote);
+            window.toggleStatus = function(item) {
+                const idx = database.findIndex(l => l.item === item);
+                if (idx >= 0) {
+                    // Se for marcar como vendido, avisa se já tem cliente? Não, deixa manual.
+                    // Se for liberar, remove status vendido.
+                    database[idx].status = database[idx].status === 'vendido' ? 'disponivel' : 'vendido';
+                    saveAndRender();
+                    atualizarRankings();
+                }
             };
 
-            // Preparar ficha para impressão/PDF
-            function prepareFicha(lote) {
-                const isSold = lote.status === 'vendido';
+            // ================= CLIENTS LOGIC =================
+            function renderClientes() {
+                const container = document.getElementById('clientesContainer');
+                const term = document.getElementById('searchCliente').value.toLowerCase();
+                const filterImo = document.getElementById('filterClienteImobiliaria').value;
                 
-                // Preencher dados da ficha
-                document.getElementById('fichaQuadraLote').textContent = `${lote.qd} / ${lote.lt}`;
-                document.getElementById('fichaItem').textContent = lote.item;
-                document.getElementById('fichaArea').textContent = lote.tam;
-                document.getElementById('fichaM2').textContent = lote.m2;
-                document.getElementById('fichaStatus').textContent = isSold ? 'VENDIDO' : 'DISPONÍVEL';
-                document.getElementById('fichaData').textContent = new Date().toLocaleDateString('pt-BR');
-                document.getElementById('fichaValorTotal').textContent = lote.total;
-                document.getElementById('fichaSinal').textContent = lote.sinal;
-                document.getElementById('fichaSinalVista').textContent = lote.sinalVista;
-                document.getElementById('fichaReserva').textContent = lote.reserva;
-                document.getElementById('fichaSaldoVista').textContent = lote.saldoVista;
-                document.getElementById('fichaSaldo2x').textContent = lote.saldo2x;
-                document.getElementById('fichaSaldo3x').textContent = lote.saldo3x;
-                document.getElementById('fichaSaldo60').textContent = lote.saldo60;
-                document.getElementById('ficha120').textContent = lote.p120;
-                document.getElementById('ficha156').textContent = lote.p156;
-                document.getElementById('ficha160').textContent = lote.p160;
-                document.getElementById('fichaGeradoEm').textContent = new Date().toLocaleDateString('pt-BR');
+                let list = clientes.filter(c => 
+                    (c.nome.toLowerCase().includes(term) || c.email.toLowerCase().includes(term)) &&
+                    (filterImo === 'todos' || c.imobiliariaId === filterImo)
+                );
                 
-                // Atualizar badge de status
-                const statusBadge = document.getElementById('fichaStatusBadge');
-                statusBadge.className = `ficha-status ${isSold ? 'status-vendido' : 'status-disponivel'}`;
-                statusBadge.textContent = isSold ? 'VENDIDO' : 'DISPONÍVEL';
-            }
-
-            // Baixar ficha como PDF (CORRIGIDO)
-            document.getElementById('downloadFichaButton').addEventListener('click', async () => {
-                if (!currentLote) {
-                    alert('Nenhum lote selecionado.');
+                container.innerHTML = '';
+                if(list.length === 0) {
+                    container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:20px; color:#aaa;">Nenhum cliente encontrado.</div>`;
                     return;
                 }
+
+                list.forEach(c => {
+                    // Verificar lote atual
+                    const lote = database.find(l => l.item === c.loteId);
+                    const div = document.createElement('div');
+                    div.className = 'cliente-card';
+                    div.innerHTML = `
+                        <div style="display:flex; justify-content:space-between;">
+                            <strong style="color:var(--primary-color); font-size:1rem;">${c.nome}</strong>
+                            <span style="font-size:0.7rem; color:#666;">${new Date(c.dataCadastro).toLocaleDateString()}</span>
+                        </div>
+                        <div style="margin:8px 0; font-size:0.85rem; color:#555;">
+                            <div><i class="fas fa-phone"></i> ${c.telefone || '-'}</div>
+                            <div><i class="fas fa-building"></i> ${c.imobiliaria || 'Venda Direta'}</div>
+                            <div><i class="fas fa-home"></i> <strong>${c.loteInfo}</strong></div>
+                        </div>
+                        <div style="display:flex; gap:5px; margin-top:10px;">
+                            <button class="btn-sm btn-primary" onclick="printCliente('${c.id}')"><i class="fas fa-file-pdf"></i> Ficha</button>
+                            <button class="btn-sm btn-outline" onclick="editCliente('${c.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn-sm btn-danger" onclick="deleteCliente('${c.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            document.getElementById('salvarCliente').addEventListener('click', () => {
+                const nome = document.getElementById('clienteNome').value;
+                const loteId = document.getElementById('clienteLote').value;
+                const imobId = document.getElementById('clienteImobiliaria').value;
                 
-                try {
-                    const { jsPDF } = window.jspdf;
-                    const doc = new jsPDF('p', 'mm', 'a4');
-                    
-                    // Preparar a ficha antes de capturar
-                    prepareFicha(currentLote);
-                    
-                    // Capturar a ficha como imagem
-                    const fichaElement = document.getElementById('printFicha');
-                    
-                    // Mostrar temporariamente a ficha para captura
-                    fichaElement.style.display = 'block';
-                    
-                    const canvas = await html2canvas(fichaElement, {
-                        scale: 2,
-                        useCORS: true,
-                        logging: false,
-                        backgroundColor: '#ffffff'
-                    });
-                    
-                    // Ocultar a ficha novamente
-                    fichaElement.style.display = 'none';
-                    
-                    const imgData = canvas.toDataURL('image/png');
-                    const imgWidth = 190; // Largura menor para margens
-                    const imgHeight = canvas.height * imgWidth / canvas.width;
-                    
-                    // Calcular posição para centralizar
-                    const xPosition = (210 - imgWidth) / 2; // 210mm é a largura do A4
-                    
-                    doc.addImage(imgData, 'PNG', xPosition, 10, imgWidth, imgHeight);
-                    
-                    doc.save(`Ficha_Lote_${currentLote.qd}_${currentLote.lt}_${new Date().toISOString().split('T')[0]}.pdf`);
-                    
-                } catch (error) {
-                    console.error('Erro ao gerar PDF:', error);
-                    alert('Erro ao gerar PDF. Verifique o console para mais detalhes.');
+                if(!nome || !loteId) return alert('Nome e Lote são obrigatórios.');
+                
+                const lote = database.find(l => l.item === loteId);
+                const imobiliaria = imobiliarias.find(i => i.id === imobId);
+                const imobNome = imobiliaria ? imobiliaria.nome : 'Venda Direta';
+
+                const obj = {
+                    id: editingClienteId || Date.now().toString(),
+                    nome,
+                    telefone: document.getElementById('clienteTelefone').value,
+                    email: document.getElementById('clienteEmail').value,
+                    imobiliariaId: imobId,
+                    imobiliaria: imobNome,
+                    corretor: document.getElementById('clienteCorretor').value,
+                    loteId,
+                    loteInfo: `Qd ${lote.qd} - Lt ${lote.lt}`,
+                    observacoes: document.getElementById('clienteObservacoes').value,
+                    dataCadastro: new Date().toISOString()
+                };
+
+                if(editingClienteId) {
+                    const idx = clientes.findIndex(c => c.id === editingClienteId);
+                    clientes[idx] = obj;
+                    alert('Cliente atualizado!');
+                } else {
+                    clientes.push(obj);
+                    // AUTOMATICAMENTE MARCA COMO VENDIDO
+                    lote.status = 'vendido'; 
+                    saveAndRender(); // Salva o lote como vendido
+                    alert('Cliente salvo e lote marcado como VENDIDO!');
                 }
+
+                localStorage.setItem('reservaFoz_clientes_final', JSON.stringify(clientes));
+                renderClientes();
+                closeClienteModal();
+                atualizarRankings();
             });
 
-            window.closeModal = function() { 
-                document.getElementById('detailModal').style.display = 'none'; 
-                currentLote = null;
+            // ================= IMOBILIARIAS LOGIC =================
+            function renderImobiliarias() {
+                const container = document.getElementById('imobiliariasContainer');
+                const term = document.getElementById('searchImobiliaria').value.toLowerCase();
+                
+                let list = imobiliarias.filter(i => i.nome.toLowerCase().includes(term));
+                container.innerHTML = '';
+                
+                if(list.length === 0) {
+                    container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:20px; color:#aaa;">Nenhuma imobiliária cadastrada.</div>`;
+                    return;
+                }
+
+                list.forEach(i => {
+                    // Stats rápidos
+                    const vendas = clientes.filter(c => c.imobiliariaId === i.id).length;
+                    
+                    const div = document.createElement('div');
+                    div.className = 'imobiliaria-card';
+                    div.innerHTML = `
+                        <div style="display:flex; justify-content:space-between;">
+                            <strong style="color:var(--secondary-color); font-size:1rem;">${i.nome}</strong>
+                            <span style="font-size:0.7rem; background:#eee; padding:2px 6px; border-radius:4px;">${vendas} Vendas</span>
+                        </div>
+                        <div style="margin:8px 0; font-size:0.85rem; color:#555;">
+                            <div><i class="fas fa-user"></i> ${i.responsavel || '-'}</div>
+                            <div><i class="fas fa-percent"></i> Comissão: ${i.comissao || 0}%</div>
+                            <div><i class="fas fa-phone"></i> ${i.telefone || '-'}</div>
+                        </div>
+                        <div style="display:flex; gap:5px; margin-top:10px;">
+                            <button class="btn-sm btn-outline" onclick="editImobiliaria('${i.id}')"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn-sm btn-danger" onclick="deleteImobiliaria('${i.id}')"><i class="fas fa-trash"></i> Excluir</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            document.getElementById('salvarImobiliaria').addEventListener('click', () => {
+                const nome = document.getElementById('imobiliariaNome').value;
+                if(!nome) return alert('Nome é obrigatório');
+
+                const obj = {
+                    id: editingImobiliariaId || Date.now().toString(),
+                    nome,
+                    responsavel: document.getElementById('imobiliariaResponsavel').value,
+                    comissao: document.getElementById('imobiliariaComissao').value,
+                    telefone: document.getElementById('imobiliariaTelefone').value,
+                    cnpj: document.getElementById('imobiliariaCnpj').value,
+                    email: document.getElementById('imobiliariaEmail').value,
+                    dataCadastro: new Date().toISOString()
+                };
+
+                if(editingImobiliariaId) {
+                    const idx = imobiliarias.findIndex(i => i.id === editingImobiliariaId);
+                    imobiliarias[idx] = obj;
+                } else {
+                    imobiliarias.push(obj);
+                }
+
+                localStorage.setItem('reservaFoz_imos_final', JSON.stringify(imobiliarias));
+                renderImobiliarias();
+                updateImobiliariaSelect();
+                closeImobiliariaModal();
+            });
+
+            function updateImobiliariaSelect() {
+                const sel = document.getElementById('clienteImobiliaria');
+                const filter = document.getElementById('filterClienteImobiliaria');
+                
+                sel.innerHTML = '<option value="">Venda Direta (Sem Imobiliária)</option>';
+                filter.innerHTML = '<option value="todos">Todas Imobiliárias</option>';
+                
+                imobiliarias.forEach(i => {
+                    const opt = `<option value="${i.id}">${i.nome}</option>`;
+                    sel.innerHTML += opt;
+                    filter.innerHTML += opt;
+                });
+            }
+
+            // ================= MODAL HELPERS =================
+            window.openModal = function(lote) {
+                currentLote = lote;
+                const setText = (id, val) => document.getElementById(id).innerText = val || '-';
+                
+                setText('mQuadraLote', `${lote.qd} / ${lote.lt}`);
+                setText('mItem', lote.item);
+                setText('mTam', lote.tam + ' m²');
+                setText('mM2', lote.m2);
+                setText('mTotal', lote.total);
+                setText('mSinal', lote.sinal);
+                setText('mSaldoVista', lote.saldoVista);
+                setText('mSaldo60', lote.saldo60);
+                setText('m120', lote.p120);
+
+                document.getElementById('detailModal').style.display = 'flex';
             };
 
-            // Listeners
-            ['searchLote', 'searchQuadra', 'filterStatus', 'sortSelect'].forEach(id => {
-                document.getElementById(id).addEventListener('input', filterLotes);
+            window.closeModal = () => document.getElementById('detailModal').style.display = 'none';
+
+            window.closeClienteModal = () => {
+                document.getElementById('clienteModal').style.display = 'none';
+                editingClienteId = null;
+                document.getElementById('clienteNome').value = '';
+                // limpar outros inputs...
+            };
+            
+            window.closeImobiliariaModal = () => {
+                document.getElementById('imobiliariaModal').style.display = 'none';
+                editingImobiliariaId = null;
+                document.getElementById('imobiliariaNome').value = '';
+            };
+
+            document.getElementById('novoClienteBtn').addEventListener('click', () => {
+                // Popular lotes disponíveis apenas
+                const sel = document.getElementById('clienteLote');
+                sel.innerHTML = '<option value="">Selecione...</option>';
+                database.filter(l => l.status === 'disponivel').forEach(l => {
+                    sel.innerHTML += `<option value="${l.item}">Qd ${l.qd} - Lt ${l.lt} (${l.total})</option>`;
+                });
+                document.getElementById('clienteModal').style.display = 'flex';
             });
 
-            // Listeners para busca de clientes
-            document.getElementById('searchCliente').addEventListener('input', renderClientes);
-            document.getElementById('filterClienteLote').addEventListener('change', renderClientes);
-            
-            document.getElementById('clearButton').addEventListener('click', () => {
-                if(confirm('Limpar tudo?')) { 
-                    localStorage.removeItem('reservaFoz_db4'); 
-                    localStorage.removeItem('reservaFoz_clientes');
-                    database = []; 
-                    clientes = [];
-                    saveAndRender();
+            document.getElementById('novaImobiliariaBtn').addEventListener('click', () => {
+                document.getElementById('imobiliariaModal').style.display = 'flex';
+            });
+
+            // ================= EDIT / DELETE HELPERS =================
+            window.editCliente = (id) => {
+                const c = clientes.find(x => x.id === id);
+                if(!c) return;
+                editingClienteId = id;
+                document.getElementById('clienteNome').value = c.nome;
+                document.getElementById('clienteTelefone').value = c.telefone;
+                document.getElementById('clienteEmail').value = c.email;
+                document.getElementById('clienteImobiliaria').value = c.imobiliariaId;
+                document.getElementById('clienteCorretor').value = c.corretor;
+                document.getElementById('clienteObservacoes').value = c.observacoes;
+                
+                // Lote: adicionar a opção mesmo se vendido, para poder editar
+                const sel = document.getElementById('clienteLote');
+                sel.innerHTML = `<option value="${c.loteId}" selected>${c.loteInfo}</option>`;
+                database.filter(l => l.status === 'disponivel').forEach(l => {
+                    sel.innerHTML += `<option value="${l.item}">Qd ${l.qd} - Lt ${l.lt}</option>`;
+                });
+                
+                document.getElementById('clienteModal').style.display = 'flex';
+            };
+
+            window.deleteCliente = (id) => {
+                if(confirm('Excluir cliente?')) {
+                    clientes = clientes.filter(c => c.id !== id);
+                    localStorage.setItem('reservaFoz_clientes_final', JSON.stringify(clientes));
                     renderClientes();
+                    atualizarRankings();
+                }
+            };
+
+            window.editImobiliaria = (id) => {
+                const i = imobiliarias.find(x => x.id === id);
+                editingImobiliariaId = id;
+                document.getElementById('imobiliariaNome').value = i.nome;
+                document.getElementById('imobiliariaResponsavel').value = i.responsavel;
+                document.getElementById('imobiliariaComissao').value = i.comissao;
+                document.getElementById('imobiliariaTelefone').value = i.telefone;
+                document.getElementById('imobiliariaCnpj').value = i.cnpj;
+                document.getElementById('imobiliariaEmail').value = i.email;
+                document.getElementById('imobiliariaModal').style.display = 'flex';
+            };
+
+            window.deleteImobiliaria = (id) => {
+                if(confirm('Excluir imobiliária? Clientes vinculados perderão a referência.')) {
+                    imobiliarias = imobiliarias.filter(i => i.id !== id);
+                    // Limpar referência nos clientes
+                    clientes.forEach(c => { if(c.imobiliariaId === id) { c.imobiliariaId = ''; c.imobiliaria = 'Ex-Parceiro'; }});
+                    
+                    localStorage.setItem('reservaFoz_imos_final', JSON.stringify(imobiliarias));
+                    localStorage.setItem('reservaFoz_clientes_final', JSON.stringify(clientes));
+                    renderImobiliarias();
+                    renderClientes();
+                }
+            };
+
+            // ================= PRINT / PDF LOGIC =================
+            window.printCliente = async (id) => {
+                const c = clientes.find(x => x.id === id);
+                const l = database.find(x => x.item === c.loteId);
+                
+                document.getElementById('fichaClienteNome').innerText = c.nome;
+                document.getElementById('fichaClienteTelefone').innerText = c.telefone;
+                document.getElementById('fichaClienteEmail').innerText = c.email;
+                document.getElementById('fichaClienteData').innerText = new Date(c.dataCadastro).toLocaleDateString();
+                document.getElementById('fichaClienteLote').innerText = c.loteInfo;
+                document.getElementById('fichaClienteValor').innerText = l ? l.total : '-';
+                document.getElementById('fichaClienteObservacoes').innerText = c.observacoes || 'Sem observações.';
+                document.getElementById('fichaClienteGeradoEm').innerText = new Date().toLocaleString();
+
+                generatePdfFromDiv('printFichaCliente', `Ficha_${c.nome}.pdf`);
+            };
+
+            document.getElementById('downloadFichaButton').addEventListener('click', () => {
+                if(!currentLote) return;
+                
+                // Preencher template
+                const l = currentLote;
+                const isSold = l.status === 'vendido';
+                document.getElementById('fichaQuadraLote').innerText = `Quadra ${l.qd} - Lote ${l.lt}`;
+                document.getElementById('fichaStatusBadge').innerText = isSold ? 'VENDIDO' : 'DISPONÍVEL';
+                document.getElementById('fichaStatusBadge').style.color = isSold ? '#bc4749' : '#40916c';
+                document.getElementById('fichaArea').innerText = l.tam + ' m²';
+                document.getElementById('fichaValorTotal').innerText = l.total;
+                document.getElementById('fichaSinal').innerText = l.sinal;
+                document.getElementById('fichaSaldo60').innerText = l.saldo60;
+                document.getElementById('ficha120').innerText = l.p120;
+                document.getElementById('fichaM2').innerText = l.m2;
+                document.getElementById('fichaGeradoEm').innerText = new Date().toLocaleString();
+
+                generatePdfFromDiv('printFicha', `Lote_${l.qd}_${l.lt}.pdf`);
+            });
+
+            async function generatePdfFromDiv(divId, filename) {
+                const element = document.getElementById(divId);
+                element.style.display = 'block'; // Mostrar p/ renderizar
+                
+                try {
+                    const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#ffffff' });
+                    element.style.display = 'none'; // Esconder
+                    
+                    const imgData = canvas.toDataURL('image/png');
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF('p', 'mm', 'a4');
+                    const width = 190;
+                    const height = canvas.height * width / canvas.width;
+                    
+                    doc.addImage(imgData, 'PNG', 10, 10, width, height);
+                    doc.save(filename);
+                } catch (e) {
+                    alert('Erro ao gerar PDF: ' + e.message);
+                    element.style.display = 'none';
+                }
+            }
+
+            // ================= RELATORIOS =================
+            function atualizarRankings() {
+                const container = document.getElementById('rankingImobiliarias');
+                
+                // Calcular vendas por Imob
+                const ranking = imobiliarias.map(i => {
+                    const vendas = clientes.filter(c => c.imobiliariaId === i.id);
+                    const totalVendas = vendas.reduce((acc, c) => {
+                        const l = database.find(lot => lot.item === c.loteId);
+                        return acc + (l ? parseMoney(l.total) : 0);
+                    }, 0);
+                    return { nome: i.nome, qtd: vendas.length, total: totalVendas };
+                }).sort((a,b) => b.total - a.total);
+
+                if(ranking.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; color:#aaa; padding:10px;">Sem dados.</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                ranking.slice(0, 5).forEach((r, idx) => {
+                    container.innerHTML += `
+                        <div class="ranking-item">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <div class="ranking-position">${idx+1}</div>
+                                <div>
+                                    <div style="font-weight:bold; font-size:0.9rem;">${r.nome}</div>
+                                    <div style="font-size:0.75rem; color:#666;">${r.qtd} Vendas</div>
+                                </div>
+                            </div>
+                            <div style="font-weight:bold; color:var(--primary-color);">${formatMoney(r.total)}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('downloadRelatorioImobiliarias').addEventListener('click', () => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                doc.setFontSize(16); doc.text("Relatório de Performance - Imobiliárias", 14, 20);
+                
+                const data = imobiliarias.map(i => {
+                    const vendas = clientes.filter(c => c.imobiliariaId === i.id);
+                    const total = vendas.reduce((acc, c) => {
+                        const l = database.find(lot => lot.item === c.loteId);
+                        return acc + (l ? parseMoney(l.total) : 0);
+                    }, 0);
+                    const comissao = total * (parseFloat(i.comissao)||0) / 100;
+                    return [i.nome, vendas.length, formatMoney(total), formatMoney(comissao)];
+                });
+
+                doc.autoTable({
+                    head: [['Imobiliária', 'Qtd Vendas', 'VGV Total', 'Comissão Estimada']],
+                    body: data,
+                    startY: 30,
+                    headStyles: { fillColor: [27, 77, 62] }
+                });
+                doc.save('Relatorio_Imobiliarias.pdf');
+            });
+
+            document.getElementById('downloadRelatorioCorretores').addEventListener('click', () => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.setFontSize(16); doc.text("Relatório de Vendas por Corretor", 14, 20);
+                
+                // Agrupar por corretor
+                const corretores = {};
+                clientes.forEach(c => {
+                    const nome = c.corretor || 'Não Informado';
+                    const l = database.find(lot => lot.item === c.loteId);
+                    const val = l ? parseMoney(l.total) : 0;
+                    
+                    if(!corretores[nome]) corretores[nome] = { qtd: 0, total: 0 };
+                    corretores[nome].qtd++;
+                    corretores[nome].total += val;
+                });
+
+                const data = Object.keys(corretores).map(k => [k, corretores[k].qtd, formatMoney(corretores[k].total)]);
+
+                doc.autoTable({
+                    head: [['Corretor', 'Vendas', 'VGV Total']],
+                    body: data,
+                    startY: 30,
+                    headStyles: { fillColor: [27, 77, 62] }
+                });
+                doc.save('Relatorio_Corretores.pdf');
+            });
+
+            document.getElementById('downloadRelatorioFinanceiro').addEventListener('click', () => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.setFontSize(16); doc.text("Relatório Financeiro Geral", 14, 20);
+
+                const totalLotes = database.length;
+                const vendidos = database.filter(l => l.status === 'vendido');
+                const disponiveis = database.filter(l => l.status === 'disponivel');
+
+                const vgvTotal = database.reduce((a,b) => a + parseMoney(b.total), 0);
+                const vgvVendido = vendidos.reduce((a,b) => a + parseMoney(b.total), 0);
+                const vgvDisp = disponiveis.reduce((a,b) => a + parseMoney(b.total), 0);
+
+                doc.setFontSize(12);
+                doc.text(`Total de Lotes: ${totalLotes}`, 14, 35);
+                doc.text(`Vendidos: ${vendidos.length} (${((vendidos.length/totalLotes)*100).toFixed(1)}%)`, 14, 42);
+                doc.text(`Disponíveis: ${disponiveis.length}`, 14, 49);
+                
+                doc.text(`VGV Potencial Total: ${formatMoney(vgvTotal)}`, 14, 60);
+                doc.text(`VGV Realizado (Vendido): ${formatMoney(vgvVendido)}`, 14, 67);
+                doc.text(`VGV Estoque: ${formatMoney(vgvDisp)}`, 14, 74);
+
+                doc.save('Relatorio_Financeiro.pdf');
+            });
+
+            // ================= PDF IMPORT & PARSING =================
+            document.getElementById('importPdfButton').addEventListener('click', async () => {
+                const file = document.getElementById('pdfFileInput').files[0];
+                if(!file) return alert('Selecione um PDF.');
+                document.getElementById('loadingIndicator').style.display = 'block';
+                
+                try {
+                    const buffer = await file.arrayBuffer();
+                    const pdf = await pdfjsLib.getDocument(buffer).promise;
+                    let fullText = '';
+                    for(let i=1; i<=pdf.numPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const content = await page.getTextContent();
+                        fullText += content.items.map(item => item.str).join(' ') + '\n';
+                    }
+                    
+                    const newData = parseAndLoad(fullText);
+                    // Merge status if exists
+                    newData.forEach(n => {
+                        const old = database.find(o => o.item === n.item);
+                        if(old && old.status === 'vendido') n.status = 'vendido';
+                    });
+                    
+                    database = newData;
+                    saveAndRender();
+                    alert(`${database.length} lotes importados!`);
+                } catch(e) {
+                    alert('Erro PDF: ' + e.message);
+                } finally {
+                    document.getElementById('loadingIndicator').style.display = 'none';
                 }
             });
 
-            // Botões para abrir modal de cliente
-            document.getElementById('novoClienteBtn').addEventListener('click', openClienteModal);
-            document.getElementById('novoClienteEmptyBtn').addEventListener('click', openClienteModal);
-
-            // Exportação PDF otimizada com melhor aproveitamento de espaço
-            document.getElementById('downloadFullPdf').addEventListener('click', () => {
-                if (database.length === 0) return alert('Sem dados para exportar.');
+            function parseAndLoad(text) {
+                const data = [];
+                let clean = text.replace(/R\$\s*/gi, '').replace(/\s+/g, ' ');
                 
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('l', 'mm', 'a4'); 
+                // Regex ajustada para capturar campos da tabela padrão
+                const regex = /(\d+)\s+([A-Z])\s+(\d+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)/g;
+                let match;
                 
-                // Configurações otimizadas para melhor aproveitamento
-                doc.setFontSize(16);
-                doc.setTextColor(27, 77, 62);
-                doc.text("Tabela de Disponibilidade - RESERVA DA FOZ", 15, 12);
-                doc.setFontSize(10);
-                doc.text(`Gerado em: ${new Date().toLocaleDateString()}`, 15, 18);
+                while ((match = regex.exec(clean)) !== null) {
+                    data.push({
+                        item: match[1], qd: match[2], lt: match[3], tam: match[4], m2: match[5],
+                        total: match[6]||'-', sinal: match[7]||'-', sinalVista: match[8]||'-',
+                        reserva: match[9]||'-', saldoVista: match[10]||'-', saldo60: match[13]||'-',
+                        p120: match[14]||'-', p156: match[15]||'-', p160: match[16]||'-', // índices ajustados approx
+                        saldo2x: match[11]||'-', saldo3x: match[12]||'-',
+                        status: 'disponivel'
+                    });
+                }
+                return data;
+            }
 
-                // Preparar dados - apenas lotes disponíveis
-                const list = database
-                    .filter(l => l.status !== 'vendido')
-                    .sort((a,b) => a.qd.localeCompare(b.qd) || parseInt(a.lt) - parseInt(b.lt));
+            // ================= LISTENERS DIVERSOS =================
+            document.getElementById('searchLote').addEventListener('input', filterLotes);
+            document.getElementById('searchQuadra').addEventListener('input', filterLotes);
+            document.getElementById('filterStatus').addEventListener('change', filterLotes);
+            document.getElementById('sortSelect').addEventListener('change', filterLotes);
+            document.getElementById('searchCliente').addEventListener('input', renderClientes);
+            document.getElementById('filterClienteImobiliaria').addEventListener('change', renderClientes);
+            document.getElementById('searchImobiliaria').addEventListener('input', renderImobiliarias);
 
-                // Criar corpo da tabela com todas as colunas
-                const body = list.map(l => [
-                    l.item, 
-                    l.qd, 
-                    l.lt, 
-                    l.tam, 
-                    l.total, 
-                    l.sinal, 
-                    l.sinalVista,
-                    l.reserva, 
-                    l.saldoVista, 
-                    l.saldo2x,
-                    l.saldo3x,
-                    l.saldo60,
-                    l.p120,
-                    l.p156,
-                    l.p160
-                ]);
-
-                // Configurar a tabela com melhor aproveitamento de espaço
-                doc.autoTable({
-                    head: [
-                        ['Item', 'Qd', 'Lt', 'M²', 'Total', 'Sinal', 'Sinal Vista', 'Reserva', 
-                         'Saldo Vista', 'Saldo 2x', 'Saldo 3x', 'Saldo 60', '120x', '156x', '160x']
-                    ],
-                    body: body,
-                    startY: 22,
-                    styles: { 
-                        fontSize: 7, // Fonte um pouco maior para melhor legibilidade
-                        cellPadding: 2,
-                        lineColor: [200, 200, 200],
-                        lineWidth: 0.1,
-                        font: 'helvetica'
-                    },
-                    headStyles: { 
-                        fillColor: [27, 77, 62],
-                        textColor: [255, 255, 255],
-                        fontSize: 7,
-                        fontStyle: 'bold',
-                        cellPadding: 3
-                    },
-                    alternateRowStyles: { 
-                        fillColor: [241, 248, 244] 
-                    },
-                    margin: { left: 8, right: 8, top: 22 }, // Margens otimizadas
-                    tableWidth: 'wrap',
-                    columnStyles: {
-                        0: { cellWidth: 14 }, // Item
-                        1: { cellWidth: 12 }, // Qd
-                        2: { cellWidth: 12 }, // Lt
-                        3: { cellWidth: 16 }, // M²
-                        4: { cellWidth: 22 }, // Total
-                        5: { cellWidth: 18 }, // Sinal
-                        6: { cellWidth: 20 }, // Sinal Vista
-                        7: { cellWidth: 18 }, // Reserva
-                        8: { cellWidth: 20 }, // Saldo Vista
-                        9: { cellWidth: 18 }, // Saldo 2x
-                        10: { cellWidth: 18 }, // Saldo 3x
-                        11: { cellWidth: 18 }, // Saldo 60
-                        12: { cellWidth: 16 }, // 120x
-                        13: { cellWidth: 16 }, // 156x
-                        14: { cellWidth: 16 }  // 160x
-                    },
-                    // Ajustes para melhor quebra de texto
-                    didDrawPage: function (data) {
-                        // Adicionar número da página
-                        doc.setFontSize(8);
-                        doc.setTextColor(100);
-                        doc.text(
-                            `Página ${data.pageNumber}`,
-                            data.settings.margin.left,
-                            doc.internal.pageSize.height - 10
-                        );
-                    }
-                });
-
-                doc.save(`Tabela_Disponiveis_${new Date().toISOString().split('T')[0]}.pdf`);
+            document.getElementById('clearButton').addEventListener('click', () => {
+                if(confirm('ATENÇÃO: Isso apagará TUDO (Lotes, Clientes, Imobiliárias). Continuar?')) {
+                    localStorage.clear();
+                    location.reload();
+                }
             });
 
-            // Init
-            initSimplifiedMode();
-            initCharts();
-            initTabs();
-            const saved = localStorage.getItem('reservaFoz_db4');
-            if (saved) { database = JSON.parse(saved); saveAndRender(); }
-            loadClientes();
+            // Backup / Restore simples
+            document.getElementById('backupButton').addEventListener('click', () => {
+                const data = {
+                    db: database,
+                    cli: clientes,
+                    imo: imobiliarias,
+                    date: new Date()
+                };
+                const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `backup_reserva_${Date.now()}.json`;
+                a.click();
+            });
+
+            document.getElementById('restoreButton').addEventListener('click', () => document.getElementById('restoreFileInput').click());
+            document.getElementById('restoreFileInput').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const d = JSON.parse(ev.target.result);
+                        if(d.db) database = d.db;
+                        if(d.cli) clientes = d.cli;
+                        if(d.imo) imobiliarias = d.imo;
+                        saveAndRender();
+                        renderClientes();
+                        renderImobiliarias();
+                        alert('Dados restaurados!');
+                    } catch(err) { alert('Arquivo inválido'); }
+                };
+                reader.readAsText(file);
+            });
+
+            // Start
+            init();
         });
     </script>
 </body>
