@@ -53,6 +53,15 @@
             margin-bottom: 20px;
             text-align: center;
             color: white;
+            position: relative;
+        }
+        
+        .header-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
         }
         
         /* Layout Grid */
@@ -60,6 +69,11 @@
             display: grid;
             grid-template-columns: 350px 1fr;
             gap: 20px;
+            transition: var(--transition);
+        }
+        
+        .main-grid.simplified {
+            grid-template-columns: 1fr;
         }
 
         .card {
@@ -69,6 +83,11 @@
             box-shadow: var(--box-shadow);
             margin-bottom: 20px;
             border-left: 5px solid var(--primary-color);
+            transition: var(--transition);
+        }
+        
+        .card.hidden {
+            display: none;
         }
         
         .card h2 {
@@ -255,6 +274,60 @@
             margin-top: 10px;
         }
 
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: white;
+        }
+
         @media (max-width: 900px) { 
             .main-grid { grid-template-columns: 1fr; } 
             .detail-grid { grid-template-columns: 1fr; } 
@@ -266,12 +339,21 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-tree"></i> Reserva da Foz</h1>
-            <p>Gestão de Lotes - Versão 4.8 (Detecção Avançada de Lotes Vendidos)</p>
+            <p>Gestão de Lotes - Versão 4.9 (Modo Simplificado)</p>
+            <div class="header-controls">
+                <div class="toggle-label">
+                    <span>Modo Simplificado</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="simplifiedModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
         </header>
 
-        <div class="main-grid">
-            <div class="controls-column">
-                <div class="card">
+        <div class="main-grid" id="mainGrid">
+            <div class="controls-column" id="controlsColumn">
+                <div class="card config-card">
                     <h2><i class="fas fa-file-import"></i> Dados</h2>
                     <div class="file-input-wrapper">
                         <input type="file" id="pdfFileInput" accept=".pdf">
@@ -326,14 +408,16 @@
                     <p style="font-size:0.7rem; text-align:center; color:#666;">Potencial de Vendas vs. Realizado</p>
                 </div>
 
-                <div class="sales-input-area">
-                    <h3 style="color:var(--danger-color); margin-bottom:8px; font-size:0.9rem;"><i class="fas fa-tag"></i> Marcar em Massa</h3>
-                    <p style="font-size:0.7rem; margin-bottom:5px;">Itens vermelhos (separados por vírgula):</p>
-                    <input type="text" id="soldItemsInput" class="sales-input" placeholder="Ex: 1, 5, 12, 34...">
-                    <button id="markSoldButton" class="btn-danger">Marcar Vendidos</button>
+                <div class="card config-card">
+                    <h2><i class="fas fa-tag"></i> Marcar em Massa</h2>
+                    <div class="sales-input-area">
+                        <p style="font-size:0.7rem; margin-bottom:5px;">Itens vermelhos (separados por vírgula):</p>
+                        <input type="text" id="soldItemsInput" class="sales-input" placeholder="Ex: 1, 5, 12, 34...">
+                        <button id="markSoldButton" class="btn-danger">Marcar Vendidos</button>
+                    </div>
                 </div>
 
-                <div class="card">
+                <div class="card config-card">
                     <h2><i class="fas fa-file-export"></i> Ações</h2>
                     <button id="downloadFullPdf" class="btn-success"><i class="fas fa-file-pdf"></i> Exportar PDF Completo</button>
                     
@@ -424,6 +508,37 @@
             // Estado
             let database = [];
             let charts = {};
+            let simplifiedMode = localStorage.getItem('simplifiedMode') === 'true';
+
+            // Inicializar Modo Simplificado
+            function initSimplifiedMode() {
+                const toggle = document.getElementById('simplifiedModeToggle');
+                const mainGrid = document.getElementById('mainGrid');
+                const configCards = document.querySelectorAll('.config-card');
+                
+                toggle.checked = simplifiedMode;
+                
+                if (simplifiedMode) {
+                    mainGrid.classList.add('simplified');
+                    configCards.forEach(card => card.classList.add('hidden'));
+                } else {
+                    mainGrid.classList.remove('simplified');
+                    configCards.forEach(card => card.classList.remove('hidden'));
+                }
+                
+                toggle.addEventListener('change', function() {
+                    simplifiedMode = this.checked;
+                    localStorage.setItem('simplifiedMode', simplifiedMode);
+                    
+                    if (simplifiedMode) {
+                        mainGrid.classList.add('simplified');
+                        configCards.forEach(card => card.classList.add('hidden'));
+                    } else {
+                        mainGrid.classList.remove('simplified');
+                        configCards.forEach(card => card.classList.remove('hidden'));
+                    }
+                });
+            }
 
             // Inicializar Gráficos
             function initCharts() {
@@ -680,7 +795,7 @@
                 const backupData = {
                     database: database,
                     timestamp: new Date().toISOString(),
-                    version: '4.8'
+                    version: '4.9'
                 };
                 
                 const dataStr = JSON.stringify(backupData, null, 2);
@@ -987,6 +1102,7 @@
             });
 
             // Init
+            initSimplifiedMode();
             initCharts();
             const saved = localStorage.getItem('reservaFoz_db4');
             if (saved) { database = JSON.parse(saved); saveAndRender(); }
