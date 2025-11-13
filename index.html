@@ -134,6 +134,12 @@
         }
         .search-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
         .search-input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.85rem; }
+        
+        /* Formulários */
+        .form-group { margin-bottom: 12px; }
+        .form-label { display: block; font-size: 0.8rem; margin-bottom: 4px; color: #555; font-weight: 600; }
+        .form-control { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.85rem; }
+        textarea.form-control { min-height: 80px; resize: vertical; }
 
         /* Gráficos */
         .chart-wrapper { position: relative; height: 170px; margin-bottom: 15px; }
@@ -227,42 +233,6 @@
             margin-top: 12px;
             padding-top: 12px;
             border-top: 1px dashed #ddd;
-        }
-
-        /* Detecção de cores */
-        .color-detection-section {
-            background-color: #fff8e1;
-            border: 1px solid #ffd54f;
-            padding: 12px;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
-
-        .color-sample {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            margin: 0 5px;
-            vertical-align: middle;
-            border: 1px solid #ccc;
-        }
-
-        .detection-results {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #f5f5f5;
-            border-radius: 6px;
-            font-size: 0.8rem;
-        }
-
-        /* Status Correction */
-        .status-correction {
-            background-color: #e8f5e9;
-            border: 1px solid #c8e6c9;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
         }
 
         /* Toggle Switch */
@@ -453,6 +423,123 @@
             color: white;
         }
 
+        /* Clientes */
+        .clientes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .cliente-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 15px;
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .cliente-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .cliente-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .cliente-nome {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .cliente-contato {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .cliente-lote {
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            padding: 5px 10px;
+            background: #f1f8f4;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .cliente-obs {
+            font-size: 0.8rem;
+            color: #555;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #eee;
+        }
+
+        .cliente-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .cliente-actions button {
+            flex: 1;
+            padding: 6px;
+            font-size: 0.7rem;
+        }
+
+        /* Painel de Clientes */
+        .clientes-panel {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .clientes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .clientes-title {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        /* Abas */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .tab.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         @media (max-width: 900px) { 
             .main-grid { grid-template-columns: 1fr; } 
             .detail-grid { grid-template-columns: 1fr; } 
@@ -470,6 +557,10 @@
             .ficha-content {
                 grid-template-columns: 1fr;
             }
+
+            .clientes-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -478,7 +569,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-tree"></i> Reserva da Foz</h1>
-            <p>Gestão de Estoque</p>
+            <p>Gestão de Estoque e Clientes</p>
         </header>
 
         <!-- Card de Controle de Modo Simplificado -->
@@ -492,107 +583,136 @@
             </label>
         </div>
 
-        <div class="main-grid" id="mainGrid">
-            <div class="controls-column" id="controlsColumn">
-                <div class="card config-card">
-                    <h2><i class="fas fa-file-import"></i> Dados</h2>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="pdfFileInput" accept=".pdf">
-                    </div>
-                    <button id="importPdfButton" class="btn-primary"><i class="fas fa-cog"></i> Processar PDF</button>
-                    <div id="loadingIndicator" style="display:none; text-align:center; margin-top:8px; color:#666; font-size:0.8rem;">Lendo arquivo...</div>
-                    
-                    <div class="color-detection-section">
-                        <h3 style="color:#e65100; margin-bottom:8px; font-size:0.9rem;"><i class="fas fa-palette"></i> Detecção de Lotes Vendidos</h3>
-                        <p style="font-size:0.7rem; margin-bottom:5px;">O sistema detectará automaticamente lotes vendidos baseado na formatação do PDF.</p>
-                        <div class="detection-results" id="detectionResults">
-                            <div>Status: Aguardando processamento</div>
+        <!-- Abas para navegação -->
+        <div class="tabs">
+            <div class="tab active" data-tab="lotes">Lotes</div>
+            <div class="tab" data-tab="clientes">Clientes</div>
+        </div>
+
+        <!-- Conteúdo da aba Lotes -->
+        <div class="tab-content active" id="lotes-tab">
+            <div class="main-grid" id="mainGrid">
+                <div class="controls-column" id="controlsColumn">
+                    <div class="card config-card">
+                        <h2><i class="fas fa-file-import"></i> Dados</h2>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="pdfFileInput" accept=".pdf">
                         </div>
-                        <div class="status-correction" id="statusCorrection" style="display:none;">
-                            <p style="font-size:0.7rem; margin-bottom:5px;"><i class="fas fa-info-circle"></i> <strong>Status preservados:</strong> Lotes já marcados como vendidos mantiveram seu status.</p>
+                        <button id="importPdfButton" class="btn-primary"><i class="fas fa-cog"></i> Processar PDF</button>
+                        <div id="loadingIndicator" style="display:none; text-align:center; margin-top:8px; color:#666; font-size:0.8rem;">Lendo arquivo...</div>
+                    </div>
+
+                    <!-- Card de Valor Médio Geral -->
+                    <div class="avg-value-card">
+                        <h3><i class="fas fa-chart-line"></i> Valor Médio Geral</h3>
+                        <div class="value" id="avgTotalValue">R$ 0,00</div>
+                        <div class="description">Média de valor dos lotes</div>
+                    </div>
+
+                    <div class="card">
+                        <h2><i class="fas fa-chart-pie"></i> Disponibilidade Total</h2>
+                        <div class="chart-wrapper" style="height: 150px;">
+                            <canvas id="quantityChart"></canvas>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.8rem; padding-top:8px; border-top:1px dashed #eee;">
+                            <span>Total: <strong id="totalCount">0</strong></span>
+                            <span style="color:var(--success-color)">Disp: <strong id="availCount">0</strong></span>
+                            <span style="color:var(--danger-color)">Vend: <strong id="soldCount">0</strong></span>
                         </div>
                     </div>
-                </div>
 
-                <!-- Card de Valor Médio Geral -->
-                <div class="avg-value-card">
-                    <h3><i class="fas fa-chart-line"></i> Valor Médio Geral</h3>
-                    <div class="value" id="avgTotalValue">R$ 0,00</div>
-                    <div class="description">Média de valor dos lotes</div>
-                </div>
-
-                <div class="card">
-                    <h2><i class="fas fa-chart-pie"></i> Disponibilidade Total</h2>
-                    <div class="chart-wrapper" style="height: 150px;">
-                        <canvas id="quantityChart"></canvas>
+                    <div class="card">
+                        <h2><i class="fas fa-building"></i> Disponíveis por Quadra</h2>
+                        <div class="chart-wrapper" style="height: 180px;">
+                            <canvas id="quadraChart"></canvas>
+                        </div>
+                        <p style="font-size:0.7rem; text-align:center; color:#666;">Quantidade de lotes livres em cada quadra</p>
                     </div>
-                    <div style="display:flex; justify-content:space-between; font-size:0.8rem; padding-top:8px; border-top:1px dashed #eee;">
-                        <span>Total: <strong id="totalCount">0</strong></span>
-                        <span style="color:var(--success-color)">Disp: <strong id="availCount">0</strong></span>
-                        <span style="color:var(--danger-color)">Vend: <strong id="soldCount">0</strong></span>
-                    </div>
-                </div>
 
-                <div class="card">
-                    <h2><i class="fas fa-building"></i> Disponíveis por Quadra</h2>
-                    <div class="chart-wrapper" style="height: 180px;">
-                        <canvas id="quadraChart"></canvas>
+                    <div class="card">
+                        <h2><i class="fas fa-chart-line"></i> Financeiro (VGV)</h2>
+                        <div class="chart-wrapper" style="height: 150px;">
+                            <canvas id="financialChart"></canvas>
+                        </div>
+                        <p style="font-size:0.7rem; text-align:center; color:#666;">Potencial de Vendas vs. Realizado</p>
                     </div>
-                    <p style="font-size:0.7rem; text-align:center; color:#666;">Quantidade de lotes livres em cada quadra</p>
-                </div>
 
-                <div class="card">
-                    <h2><i class="fas fa-chart-line"></i> Financeiro (VGV)</h2>
-                    <div class="chart-wrapper" style="height: 150px;">
-                        <canvas id="financialChart"></canvas>
+                    <div class="card config-card">
+                        <h2><i class="fas fa-tag"></i> Marcar em Massa</h2>
+                        <div class="sales-input-area">
+                            <p style="font-size:0.7rem; margin-bottom:5px;">Itens vermelhos (separados por vírgula):</p>
+                            <input type="text" id="soldItemsInput" class="sales-input" placeholder="Ex: 1, 5, 12, 34...">
+                            <button id="markSoldButton" class="btn-danger">Marcar Vendidos</button>
+                        </div>
                     </div>
-                    <p style="font-size:0.7rem; text-align:center; color:#666;">Potencial de Vendas vs. Realizado</p>
-                </div>
 
-                <div class="card config-card">
-                    <h2><i class="fas fa-tag"></i> Marcar em Massa</h2>
-                    <div class="sales-input-area">
-                        <p style="font-size:0.7rem; margin-bottom:5px;">Itens vermelhos (separados por vírgula):</p>
-                        <input type="text" id="soldItemsInput" class="sales-input" placeholder="Ex: 1, 5, 12, 34...">
-                        <button id="markSoldButton" class="btn-danger">Marcar Vendidos</button>
+                    <div class="card config-card">
+                        <h2><i class="fas fa-file-export"></i> Ações</h2>
+                        <button id="downloadFullPdf" class="btn-success"><i class="fas fa-file-pdf"></i> Exportar PDF Completo</button>
+                        
+                        <div class="backup-section">
+                            <h3 style="font-size:0.85rem; margin-bottom:8px; color:#666;"><i class="fas fa-database"></i> Backup do Sistema</h3>
+                            <button id="backupButton" class="btn-warning"><i class="fas fa-download"></i> Fazer Backup</button>
+                            <button id="restoreButton" class="btn-outline" style="margin-top:6px;"><i class="fas fa-upload"></i> Restaurar Backup</button>
+                            <input type="file" id="restoreFileInput" accept=".json" style="display:none;">
+                        </div>
+                        
+                        <button id="clearButton" class="btn-outline" style="margin-top:8px;"><i class="fas fa-trash"></i> Limpar Sistema</button>
                     </div>
                 </div>
 
-                <div class="card config-card">
-                    <h2><i class="fas fa-file-export"></i> Ações</h2>
-                    <button id="downloadFullPdf" class="btn-success"><i class="fas fa-file-pdf"></i> Exportar PDF Completo</button>
-                    
-                    <div class="backup-section">
-                        <h3 style="font-size:0.85rem; margin-bottom:8px; color:#666;"><i class="fas fa-database"></i> Backup do Sistema</h3>
-                        <button id="backupButton" class="btn-warning"><i class="fas fa-download"></i> Fazer Backup</button>
-                        <button id="restoreButton" class="btn-outline" style="margin-top:6px;"><i class="fas fa-upload"></i> Restaurar Backup</button>
-                        <input type="file" id="restoreFileInput" accept=".json" style="display:none;">
+                <div class="results-column">
+                    <div class="card">
+                        <h2><i class="fas fa-list"></i> Catálogo de Lotes</h2>
+                        <div class="search-bar">
+                            <input type="text" id="searchLote" class="search-input" placeholder="Buscar Lote...">
+                            <input type="text" id="searchQuadra" class="search-input" placeholder="Quadra...">
+                            <select id="filterStatus" class="search-input">
+                                <option value="todos">Todos</option>
+                                <option value="disponivel">Disponíveis</option>
+                                <option value="vendido">Vendidos</option>
+                            </select>
+                            <select id="sortSelect" class="search-input">
+                                <option value="quadra">Ordenar por Quadra</option>
+                                <option value="valor">Ordenar por Valor</option>
+                            </select>
+                        </div>
+                        <div id="resultsContainer">
+                            <div style="grid-column:1/-1; text-align:center; padding:30px; color:#aaa;">
+                                <i class="fas fa-folder-open" style="font-size:2.5rem; margin-bottom:8px;"></i>
+                                <p>Importe o PDF para começar.</p>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <button id="clearButton" class="btn-outline" style="margin-top:8px;"><i class="fas fa-trash"></i> Limpar Sistema</button>
                 </div>
             </div>
+        </div>
 
-            <div class="results-column">
+        <!-- Conteúdo da aba Clientes -->
+        <div class="tab-content" id="clientes-tab">
+            <div class="clientes-panel" id="clientesPanel">
+                <div class="clientes-header">
+                    <h2 class="clientes-title"><i class="fas fa-users"></i> Gestão de Clientes</h2>
+                    <button id="novoClienteBtn" class="btn-primary" style="width: auto;">
+                        <i class="fas fa-plus"></i> Novo Cliente
+                    </button>
+                </div>
+
                 <div class="card">
-                    <h2><i class="fas fa-list"></i> Catálogo de Lotes</h2>
+                    <h2><i class="fas fa-users"></i> Clientes Cadastrados</h2>
                     <div class="search-bar">
-                        <input type="text" id="searchLote" class="search-input" placeholder="Buscar Lote...">
-                        <input type="text" id="searchQuadra" class="search-input" placeholder="Quadra...">
-                        <select id="filterStatus" class="search-input">
-                            <option value="todos">Todos</option>
-                            <option value="disponivel">Disponíveis</option>
-                            <option value="vendido">Vendidos</option>
-                        </select>
-                        <select id="sortSelect" class="search-input">
-                            <option value="quadra">Ordenar por Quadra</option>
-                            <option value="valor">Ordenar por Valor</option>
+                        <input type="text" id="searchCliente" class="search-input" placeholder="Buscar cliente...">
+                        <select id="filterClienteLote" class="search-input">
+                            <option value="todos">Todos os lotes</option>
                         </select>
                     </div>
-                    <div id="resultsContainer">
-                        <div style="grid-column:1/-1; text-align:center; padding:30px; color:#aaa;">
-                            <i class="fas fa-folder-open" style="font-size:2.5rem; margin-bottom:8px;"></i>
-                            <p>Importe o PDF para começar.</p>
+                    <div id="clientesContainer" class="clientes-grid">
+                        <div style="grid-column:1/-1; text-align:center; padding:20px; color:#aaa;">
+                            <i class="fas fa-user-plus" style="font-size:2rem; margin-bottom:8px;"></i>
+                            <p>Nenhum cliente cadastrado ainda.</p>
+                            <button id="novoClienteEmptyBtn" class="btn-primary" style="width: auto; margin-top: 10px;">
+                                <i class="fas fa-plus"></i> Cadastrar Primeiro Cliente
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -600,7 +720,7 @@
         </div>
     </div>
 
-    <!-- Modal de Detalhes -->
+    <!-- Modal de Detalhes do Lote -->
     <div class="modal-overlay" id="detailModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -644,6 +764,48 @@
                 <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
                     <button id="downloadFichaButton" class="btn-success" style="width: auto;">
                         <i class="fas fa-download"></i> Baixar Ficha em PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro de Cliente -->
+    <div class="modal-overlay" id="clienteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="clienteModalTitle">Cadastrar Novo Cliente</h3>
+                <button class="close-modal" onclick="closeClienteModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Nome Completo *</label>
+                    <input type="text" id="clienteNome" class="form-control" placeholder="Nome do cliente">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Telefone</label>
+                    <input type="text" id="clienteTelefone" class="form-control" placeholder="(00) 00000-0000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="clienteEmail" class="form-control" placeholder="email@exemplo.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Lote de Interesse *</label>
+                    <select id="clienteLote" class="form-control">
+                        <option value="">Selecione um lote</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Observações</label>
+                    <textarea id="clienteObservacoes" class="form-control" placeholder="Observações sobre o cliente ou interesse..."></textarea>
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button id="salvarCliente" class="btn-success">
+                        <i class="fas fa-save"></i> Salvar Cliente
+                    </button>
+                    <button class="btn-outline" onclick="closeClienteModal()">
+                        <i class="fas fa-times"></i> Cancelar
                     </button>
                 </div>
             </div>
@@ -762,15 +924,80 @@
         </div>
     </div>
 
+    <!-- Ficha do Cliente para Impressão/PDF (oculta) -->
+    <div class="print-ficha" id="printFichaCliente">
+        <div class="ficha-header">
+            <h1 class="ficha-title">Reserva da Foz</h1>
+            <div class="ficha-subtitle">Ficha do Cliente</div>
+        </div>
+
+        <div class="ficha-content">
+            <div class="ficha-section" style="grid-column: 1 / -1;">
+                <h3><i class="fas fa-user"></i> Dados do Cliente</h3>
+                <div class="ficha-info">
+                    <div class="ficha-info-item">
+                        <span class="ficha-label">Nome:</span>
+                        <span class="ficha-value" id="fichaClienteNome">-</span>
+                    </div>
+                    <div class="ficha-info-item">
+                        <span class="ficha-label">Telefone:</span>
+                        <span class="ficha-value" id="fichaClienteTelefone">-</span>
+                    </div>
+                    <div class="ficha-info-item">
+                        <span class="ficha-label">Email:</span>
+                        <span class="ficha-value" id="fichaClienteEmail">-</span>
+                    </div>
+                    <div class="ficha-info-item">
+                        <span class="ficha-label">Data de Cadastro:</span>
+                        <span class="ficha-value" id="fichaClienteData">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ficha-section" style="grid-column: 1 / -1;">
+                <h3><i class="fas fa-home"></i> Lote de Interesse</h3>
+                <div class="ficha-info">
+                    <div class="ficha-info-item">
+                        <span class="ficha-label">Quadra / Lote:</span>
+                        <span class="ficha-value" id="fichaClienteLote">-</span>
+                    </div>
+                    <div class="ficha-info-item">
+                        <span class="ficha-label">Área Total:</span>
+                        <span class="ficha-value" id="fichaClienteArea">- m²</span>
+                    </div>
+                    <div class="ficha-info-item">
+                        <span class="ficha-label">Valor Total:</span>
+                        <span class="ficha-value" id="fichaClienteValor">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ficha-section" style="grid-column: 1 / -1;">
+                <h3><i class="fas fa-sticky-note"></i> Observações</h3>
+                <div style="padding: 10px; background: #f8f9fa; border-radius: 6px; min-height: 80px;">
+                    <p id="fichaClienteObservacoes">-</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="ficha-footer">
+            <p>Reserva da Foz - Sistema de Gestão de Clientes | Gerado em <span id="fichaClienteGeradoEm">-</span></p>
+            <p>www.reservadafoz.com.br | contato@reservadafoz.com.br</p>
+        </div>
+    </div>
+
     <script>
         // Desenvolvedor Alex Peixoto. Todos os Direitos Reservados
         
         document.addEventListener('DOMContentLoaded', () => {
             // Estado
             let database = [];
+            let clientes = [];
             let charts = {};
             let currentLote = null;
+            let currentCliente = null;
             let simplifiedMode = localStorage.getItem('simplifiedMode') === 'true';
+            let editingClienteId = null;
 
             // Inicializar Modo Simplificado
             function initSimplifiedMode() {
@@ -876,14 +1103,41 @@
                 });
             }
 
-            // Processamento PDF com detecção avançada de cores
+            // Sistema de Abas
+            function initTabs() {
+                const tabs = document.querySelectorAll('.tab');
+                const tabContents = document.querySelectorAll('.tab-content');
+                
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const tabId = tab.getAttribute('data-tab');
+                        
+                        // Ativar aba clicada
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        
+                        // Mostrar conteúdo correspondente
+                        tabContents.forEach(content => {
+                            content.classList.remove('active');
+                            if (content.id === `${tabId}-tab`) {
+                                content.classList.add('active');
+                            }
+                        });
+                        
+                        // Mostrar painel de clientes se for a aba de clientes
+                        if (tabId === 'clientes') {
+                            document.getElementById('clientesPanel').style.display = 'block';
+                        }
+                    });
+                });
+            }
+
+            // Processamento PDF
             document.getElementById('importPdfButton').addEventListener('click', async () => {
                 const file = document.getElementById('pdfFileInput').files[0];
                 if (!file) return alert('Selecione o PDF.');
                 
                 document.getElementById('loadingIndicator').style.display = 'block';
-                document.getElementById('detectionResults').innerHTML = '<div>Status: Processando PDF...</div>';
-                document.getElementById('statusCorrection').style.display = 'none';
                 
                 try {
                     const buffer = await file.arrayBuffer();
@@ -906,25 +1160,11 @@
                     
                     database = colorDetectedData;
                     saveAndRender();
+                    updateLoteSelect();
                     
-                    // Mostrar resultados da detecção
-                    const soldCount = database.filter(l => l.status === 'vendido').length;
-                    const newlyDetected = soldCount - existingSoldItems.length;
-                    
-                    document.getElementById('detectionResults').innerHTML = 
-                        `<div>Status: Processamento concluído</div>
-                         <div>Total de lotes: ${database.length}</div>
-                         <div>Lotes vendidos detectados: <strong>${soldCount}</strong></div>
-                         <div>Novos lotes vendidos detectados: <strong>${newlyDetected}</strong></div>
-                         <div style="margin-top:5px; font-size:0.7rem;">Verifique os resultados e ajuste se necessário.</div>`;
-                         
-                    document.getElementById('statusCorrection').style.display = 'block';
-                    
-                    alert(`${database.length} lotes carregados! ${newlyDetected} novos lotes detectados como VENDIDO.`);
+                    alert(`${database.length} lotes carregados!`);
                 } catch (e) {
                     alert('Erro ao ler PDF: ' + e.message);
-                    document.getElementById('detectionResults').innerHTML = 
-                        `<div style="color:var(--danger-color)">Erro: ${e.message}</div>`;
                 } finally {
                     document.getElementById('loadingIndicator').style.display = 'none';
                 }
@@ -1056,8 +1296,9 @@
                 
                 const backupData = {
                     database: database,
+                    clientes: clientes,
                     timestamp: new Date().toISOString(),
-                    version: '5.0',
+                    version: '6.0',
                     developer: 'Alex Peixoto - Todos os Direitos Reservados'
                 };
                 
@@ -1092,7 +1333,10 @@
                         if (backupData.database && Array.isArray(backupData.database)) {
                             if (confirm(`Deseja restaurar backup com ${backupData.database.length} lotes?`)) {
                                 database = backupData.database;
+                                clientes = backupData.clientes || [];
                                 saveAndRender();
+                                renderClientes();
+                                updateLoteSelect();
                                 alert('Backup restaurado com sucesso!');
                             }
                         } else {
@@ -1128,11 +1372,295 @@
                 }
             });
 
+            // Cadastro de Clientes
+            document.getElementById('salvarCliente').addEventListener('click', () => {
+                const nome = document.getElementById('clienteNome').value.trim();
+                const telefone = document.getElementById('clienteTelefone').value.trim();
+                const email = document.getElementById('clienteEmail').value.trim();
+                const loteId = document.getElementById('clienteLote').value;
+                const observacoes = document.getElementById('clienteObservacoes').value.trim();
+                
+                if (!nome) {
+                    alert('Por favor, preencha o nome do cliente.');
+                    return;
+                }
+                
+                if (!loteId) {
+                    alert('Por favor, selecione um lote de interesse.');
+                    return;
+                }
+                
+                const lote = database.find(l => l.item === loteId);
+                if (!lote) {
+                    alert('Lote selecionado não encontrado.');
+                    return;
+                }
+                
+                if (editingClienteId) {
+                    // Editar cliente existente
+                    const clienteIndex = clientes.findIndex(c => c.id === editingClienteId);
+                    if (clienteIndex !== -1) {
+                        clientes[clienteIndex] = {
+                            ...clientes[clienteIndex],
+                            nome: nome,
+                            telefone: telefone,
+                            email: email,
+                            loteId: loteId,
+                            loteInfo: `${lote.qd} / ${lote.lt}`,
+                            observacoes: observacoes
+                        };
+                    }
+                    editingClienteId = null;
+                } else {
+                    // Criar novo cliente
+                    const novoCliente = {
+                        id: Date.now().toString(),
+                        nome: nome,
+                        telefone: telefone,
+                        email: email,
+                        loteId: loteId,
+                        loteInfo: `${lote.qd} / ${lote.lt}`,
+                        observacoes: observacoes,
+                        dataCadastro: new Date().toISOString()
+                    };
+                    
+                    clientes.push(novoCliente);
+                }
+                
+                saveClientes();
+                renderClientes();
+                closeClienteModal();
+                
+                alert(editingClienteId ? 'Cliente atualizado com sucesso!' : 'Cliente cadastrado com sucesso!');
+            });
+
+            // Atualizar select de lotes
+            function updateLoteSelect() {
+                const select = document.getElementById('clienteLote');
+                const filterSelect = document.getElementById('filterClienteLote');
+                
+                select.innerHTML = '<option value="">Selecione um lote</option>';
+                filterSelect.innerHTML = '<option value="todos">Todos os lotes</option>';
+                
+                const lotesDisponiveis = database.filter(l => l.status === 'disponivel');
+                
+                lotesDisponiveis.forEach(lote => {
+                    const option = document.createElement('option');
+                    option.value = lote.item;
+                    option.textContent = `Qd ${lote.qd} - Lt ${lote.lt} (${lote.tam}m² - ${lote.total})`;
+                    select.appendChild(option);
+                    
+                    const filterOption = document.createElement('option');
+                    filterOption.value = lote.item;
+                    filterOption.textContent = `Qd ${lote.qd} - Lt ${lote.lt}`;
+                    filterSelect.appendChild(filterOption);
+                });
+            }
+
+            // Renderizar clientes
+            function renderClientes() {
+                const container = document.getElementById('clientesContainer');
+                const searchTerm = document.getElementById('searchCliente').value.toLowerCase();
+                const filterLote = document.getElementById('filterClienteLote').value;
+                
+                let filteredClientes = clientes;
+                
+                // Aplicar filtros
+                if (searchTerm) {
+                    filteredClientes = filteredClientes.filter(cliente => 
+                        cliente.nome.toLowerCase().includes(searchTerm) ||
+                        cliente.telefone.includes(searchTerm) ||
+                        cliente.email.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                if (filterLote && filterLote !== 'todos') {
+                    filteredClientes = filteredClientes.filter(cliente => cliente.loteId === filterLote);
+                }
+                
+                container.innerHTML = '';
+                
+                if (filteredClientes.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column:1/-1; text-align:center; padding:20px; color:#aaa;">
+                            <i class="fas fa-user-plus" style="font-size:2rem; margin-bottom:8px;"></i>
+                            <p>Nenhum cliente encontrado.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                filteredClientes.forEach(cliente => {
+                    const div = document.createElement('div');
+                    div.className = 'cliente-card';
+                    
+                    div.innerHTML = `
+                        <div class="cliente-header">
+                            <div class="cliente-nome">${cliente.nome}</div>
+                        </div>
+                        <div class="cliente-contato">
+                            <div><i class="fas fa-phone"></i> ${cliente.telefone || 'Não informado'}</div>
+                            <div><i class="fas fa-envelope"></i> ${cliente.email || 'Não informado'}</div>
+                        </div>
+                        <div class="cliente-lote">
+                            <i class="fas fa-home"></i> Lote: ${cliente.loteInfo}
+                        </div>
+                        ${cliente.observacoes ? `
+                            <div class="cliente-obs">
+                                <strong>Observações:</strong> ${cliente.observacoes}
+                            </div>
+                        ` : ''}
+                        <div class="cliente-actions">
+                            <button class="btn-sm btn-primary" onclick="gerarFichaCliente('${cliente.id}')">
+                                <i class="fas fa-download"></i> Ficha PDF
+                            </button>
+                            <button class="btn-sm btn-outline" onclick="editarCliente('${cliente.id}')">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn-sm btn-danger" onclick="excluirCliente('${cliente.id}')">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </div>
+                    `;
+                    
+                    container.appendChild(div);
+                });
+            }
+
+            // Funções globais para ações de clientes
+            window.gerarFichaCliente = function(clienteId) {
+                const cliente = clientes.find(c => c.id === clienteId);
+                if (!cliente) return;
+                
+                const lote = database.find(l => l.item === cliente.loteId);
+                if (!lote) {
+                    alert('Lote relacionado não encontrado.');
+                    return;
+                }
+                
+                currentCliente = cliente;
+                prepareFichaCliente(cliente, lote);
+                downloadFichaCliente();
+            };
+
+            window.editarCliente = function(clienteId) {
+                const cliente = clientes.find(c => c.id === clienteId);
+                if (!cliente) return;
+                
+                document.getElementById('clienteNome').value = cliente.nome;
+                document.getElementById('clienteTelefone').value = cliente.telefone;
+                document.getElementById('clienteEmail').value = cliente.email;
+                document.getElementById('clienteLote').value = cliente.loteId;
+                document.getElementById('clienteObservacoes').value = cliente.observacoes;
+                
+                editingClienteId = clienteId;
+                document.getElementById('clienteModalTitle').textContent = 'Editar Cliente';
+                openClienteModal();
+            };
+
+            window.excluirCliente = function(clienteId) {
+                if (confirm('Tem certeza que deseja excluir este cliente?')) {
+                    clientes = clientes.filter(c => c.id !== clienteId);
+                    saveClientes();
+                    renderClientes();
+                    alert('Cliente excluído com sucesso.');
+                }
+            };
+
+            // Abrir modal de cliente
+            window.openClienteModal = function() {
+                document.getElementById('clienteModal').style.display = 'flex';
+            };
+
+            // Fechar modal de cliente
+            window.closeClienteModal = function() {
+                document.getElementById('clienteModal').style.display = 'none';
+                document.getElementById('clienteModalTitle').textContent = 'Cadastrar Novo Cliente';
+                document.getElementById('clienteNome').value = '';
+                document.getElementById('clienteTelefone').value = '';
+                document.getElementById('clienteEmail').value = '';
+                document.getElementById('clienteLote').value = '';
+                document.getElementById('clienteObservacoes').value = '';
+                editingClienteId = null;
+            };
+
+            // Preparar ficha do cliente para impressão/PDF
+            function prepareFichaCliente(cliente, lote) {
+                document.getElementById('fichaClienteNome').textContent = cliente.nome;
+                document.getElementById('fichaClienteTelefone').textContent = cliente.telefone || 'Não informado';
+                document.getElementById('fichaClienteEmail').textContent = cliente.email || 'Não informado';
+                document.getElementById('fichaClienteData').textContent = new Date(cliente.dataCadastro).toLocaleDateString('pt-BR');
+                document.getElementById('fichaClienteLote').textContent = cliente.loteInfo;
+                document.getElementById('fichaClienteArea').textContent = lote.tam;
+                document.getElementById('fichaClienteValor').textContent = lote.total;
+                document.getElementById('fichaClienteObservacoes').textContent = cliente.observacoes || 'Nenhuma observação registrada.';
+                document.getElementById('fichaClienteGeradoEm').textContent = new Date().toLocaleDateString('pt-BR');
+            }
+
+            // Baixar ficha do cliente como PDF
+            async function downloadFichaCliente() {
+                if (!currentCliente) {
+                    alert('Nenhum cliente selecionado.');
+                    return;
+                }
+                
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF('p', 'mm', 'a4');
+                    
+                    // Capturar a ficha do cliente como imagem
+                    const fichaElement = document.getElementById('printFichaCliente');
+                    
+                    // Mostrar temporariamente a ficha para captura
+                    fichaElement.style.display = 'block';
+                    
+                    const canvas = await html2canvas(fichaElement, {
+                        scale: 2,
+                        useCORS: true,
+                        logging: false,
+                        backgroundColor: '#ffffff'
+                    });
+                    
+                    // Ocultar a ficha novamente
+                    fichaElement.style.display = 'none';
+                    
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgWidth = 190; // Largura menor para margens
+                    const imgHeight = canvas.height * imgWidth / canvas.width;
+                    
+                    // Calcular posição para centralizar
+                    const xPosition = (210 - imgWidth) / 2; // 210mm é a largura do A4
+                    
+                    doc.addImage(imgData, 'PNG', xPosition, 10, imgWidth, imgHeight);
+                    
+                    doc.save(`Ficha_Cliente_${currentCliente.nome.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+                    
+                } catch (error) {
+                    console.error('Erro ao gerar PDF:', error);
+                    alert('Erro ao gerar PDF. Verifique o console para mais detalhes.');
+                }
+            }
+
+            // Salvar clientes no localStorage
+            function saveClientes() {
+                localStorage.setItem('reservaFoz_clientes', JSON.stringify(clientes));
+            }
+
+            // Carregar clientes do localStorage
+            function loadClientes() {
+                const saved = localStorage.getItem('reservaFoz_clientes');
+                if (saved) {
+                    clientes = JSON.parse(saved);
+                    renderClientes();
+                }
+            }
+
             // Renderização
             function saveAndRender() {
                 localStorage.setItem('reservaFoz_db4', JSON.stringify(database));
                 updateStats();
                 filterLotes();
+                updateLoteSelect();
             }
 
             function updateStats() {
@@ -1345,10 +1873,25 @@
             ['searchLote', 'searchQuadra', 'filterStatus', 'sortSelect'].forEach(id => {
                 document.getElementById(id).addEventListener('input', filterLotes);
             });
+
+            // Listeners para busca de clientes
+            document.getElementById('searchCliente').addEventListener('input', renderClientes);
+            document.getElementById('filterClienteLote').addEventListener('change', renderClientes);
             
             document.getElementById('clearButton').addEventListener('click', () => {
-                if(confirm('Limpar tudo?')) { localStorage.removeItem('reservaFoz_db4'); database=[]; saveAndRender(); }
+                if(confirm('Limpar tudo?')) { 
+                    localStorage.removeItem('reservaFoz_db4'); 
+                    localStorage.removeItem('reservaFoz_clientes');
+                    database = []; 
+                    clientes = [];
+                    saveAndRender();
+                    renderClientes();
+                }
             });
+
+            // Botões para abrir modal de cliente
+            document.getElementById('novoClienteBtn').addEventListener('click', openClienteModal);
+            document.getElementById('novoClienteEmptyBtn').addEventListener('click', openClienteModal);
 
             // Exportação PDF otimizada com melhor aproveitamento de espaço
             document.getElementById('downloadFullPdf').addEventListener('click', () => {
@@ -1451,8 +1994,10 @@
             // Init
             initSimplifiedMode();
             initCharts();
+            initTabs();
             const saved = localStorage.getItem('reservaFoz_db4');
             if (saved) { database = JSON.parse(saved); saveAndRender(); }
+            loadClientes();
         });
     </script>
 </body>
